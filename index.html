@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Мама рядом</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF7F3; --card:#FFFFFF; --primary:#E07A6F; --primary-soft:#FCE6E1;
+    --sage:#5E9A82; --sage-soft:#E3F1EB; --text:#3B2A28; --muted:#8E7773; --line:#F3E4DF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Nunito',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:96px}
+  header{padding:20px 16px 6px}
+  h1{font-size:24px;font-weight:800}
+  h3{font-size:16px;font-weight:800;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:14px;margin-top:2px}
+  main{padding:8px 16px}
+  .screen{display:none}.screen.active{display:block}
+  .hidden{display:none!important}
+  .card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(180,120,110,.08)}
+  .hint{background:var(--primary-soft);box-shadow:none;font-size:15px;line-height:1.45}
+  .timer{font-size:54px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;color:var(--primary);margin-top:4px}
+  .timer.sage{color:var(--sage)}
+  .status{text-align:center;color:var(--muted);font-size:14px;margin:2px 0 14px}
+  .btn{border:none;border-radius:16px;padding:16px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;width:100%;transition:transform .1s}
+  .btn:active{transform:scale(.97)}
+  .sides{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btn-side{background:var(--primary-soft);color:var(--primary);border:2px solid transparent;padding:22px 10px}
+  .btn-side.suggest{border-color:var(--primary)}
+  .btn-side.on{background:var(--primary);color:#fff}
+  .btn-stop{margin-top:10px;background:var(--text);color:#fff}
+  .btn-main{background:var(--sage);color:#fff}
+  .btn-main.stop{background:var(--text)}
+  .btn-ghost{background:var(--sage-soft);color:var(--sage)}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat .n{font-size:24px;font-weight:800}
+  .stat .l{font-size:13px;color:var(--muted)}
+  .item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:none}
+  .it{font-weight:700}
+  .is{font-size:13px;color:var(--muted)}
+  .del{background:none;border:none;color:var(--muted);font-size:22px;padding:4px 10px;cursor:pointer}
+  .empty{color:var(--muted);font-size:14px;padding:6px 0}
+  .chips{display:flex;gap:8px;margin-bottom:6px}
+  .chips.scroll{overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none}
+  .chips.scroll::-webkit-scrollbar{display:none}
+  .chip{flex:1;white-space:nowrap;border:none;border-radius:999px;padding:10px 14px;font:inherit;font-weight:700;font-size:14px;background:var(--sage-soft);color:var(--sage);cursor:pointer}
+  .chips.scroll .chip{flex:none;background:var(--primary-soft);color:var(--primary)}
+  .chip.on{background:var(--sage);color:#fff}
+  .chips.scroll .chip.on{background:var(--primary);color:#fff}
+  .chip:disabled{opacity:.5}
+  .ml-row{display:flex;align-items:center;gap:8px;margin:8px 0}
+  .ml-row input{flex:1;font:inherit;font-size:28px;font-weight:800;padding:10px 14px;border:2px solid var(--line);border-radius:14px;color:var(--text);width:100%;outline:none}
+  .ml-row input:focus{border-color:var(--sage)}
+  .ml-row span{font-weight:700;color:var(--muted)}
+  .quick{display:flex;gap:8px;margin-bottom:12px}
+  .quick button{flex:1;border:none;border-radius:12px;padding:10px;font:inherit;font-weight:700;background:var(--sage-soft);color:var(--sage);cursor:pointer}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .link{background:none;border:none;font:inherit;font-weight:700;color:var(--sage);padding:8px 0 16px;cursor:pointer}
+  details.tip summary{font-weight:800;font-size:16px;list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+  details.tip summary::-webkit-details-marker{display:none}
+  details.tip summary::after{content:'+';color:var(--primary);font-size:20px;line-height:1}
+  details.tip[open] summary::after{content:'−'}
+  details.tip p{margin-top:10px;line-height:1.5;font-size:15px}
+  .disclaimer{font-size:12px;color:var(--muted);text-align:center;line-height:1.4;padding:8px 8px 16px}
+  nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding:6px 0 calc(8px + env(safe-area-inset-bottom))}
+  nav button{background:none;border:none;font:inherit;color:var(--muted);font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;cursor:pointer}
+  nav button .ico{font-size:22px;filter:grayscale(1);opacity:.6}
+  nav button.active{color:var(--primary)}
+  nav button.active .ico{filter:none;opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="hello">Привет! 🌸</h1>
+  <div class="sub" id="todayLabel"></div>
+</header>
+
+<main>
+  <!-- ===== КОРМЛЕНИЕ ===== -->
+  <section class="screen active" id="s-feed">
+    <div class="card hint" id="feedHint"></div>
+    <div class="card">
+      <div class="timer" id="feedTimer">00:00</div>
+      <div class="status" id="feedStatus"></div>
+      <div class="sides">
+        <button class="btn btn-side" data-side="left">Левая</button>
+        <button class="btn btn-side" data-side="right">Правая</button>
+      </div>
+      <button class="btn btn-stop hidden" id="feedStop">Завершить кормление</button>
+    </div>
+    <div class="stats">
+      <div class="card stat"><div class="n" id="feedCount">0</div><div class="l">кормлений сегодня</div></div>
+      <div class="card stat"><div class="n" id="feedTotal">0 мин</div><div class="l">всего у груди</div></div>
+    </div>
+    <div class="card"><h3>Сегодня</h3><div id="feedList"></div></div>
+  </section>
+
+  <!-- ===== СЦЕЖИВАНИЕ ===== -->
+  <section class="screen" id="s-pump">
+    <div class="card">
+      <div class="chips" id="pumpSides">
+        <button class="chip" data-side="left">Левая</button>
+        <button class="chip" data-side="right">Правая</button>
+        <button class="chip on" data-side="both">Обе</button>
+      </div>
+      <div class="timer sage" id="pumpTimer">00:00</div>
+      <div class="status" id="pumpStatus"></div>
+      <button class="btn btn-main" id="pumpBtn">Начать сцеживание</button>
+    </div>
+    <div class="card hidden" id="pumpForm">
+      <h3>Сколько удалось сцедить?</h3>
+      <div class="ml-row"><input type="number" inputmode="numeric" min="0" id="pumpMl" placeholder="0"><span>мл</span></div>
+      <div class="quick"><button data-add="10">+10</button><button data-add="30">+30</button><button data-add="50">+50</button></div>
+      <div class="row2">
+        <button class="btn btn-ghost" id="pumpSkip">Пропустить</button>
+        <button class="btn btn-main" id="pumpSave">Сохранить</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="card stat"><div class="n" id="pumpCount">0</div><div class="l">сцеживаний сегодня</div></div>
+      <div class="card stat"><div class="n" id="pumpMlTotal">0 мл</div><div class="l">сцежено сегодня</div></div>
+    </div>
+    <div class="card"><h3>Сегодня</h3><div id="pumpList"></div></div>
+    <button class="link" id="toStorage">Как хранить сцеженное молоко →</button>
+  </section>
+
+  <!-- ===== СОВЕТЫ ===== -->
+  <section class="screen" id="s-tips">
+    <div class="chips scroll" id="tipCats"></div>
+    <div id="tipList"></div>
+    <p class="disclaimer">Советы носят информационный характер и основаны на общих рекомендациях ВОЗ и педиатров. Они не заменяют консультацию врача. Если что-то беспокоит — обратитесь к специалисту.</p>
+  </section>
+</main>
+
+<nav>
+  <button class="active" data-tab="feed"><span class="ico">🍼</span>Кормление</button>
+  <button data-tab="pump"><span class="ico">🧴</span>Сцеживание</button>
+  <button data-tab="tips"><span class="ico">💡</span>Советы</button>
+</nav>
+
+<script>
+// ---------- Telegram ----------
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) {
+  try { tg.ready(); tg.expand(); tg.setHeaderColor('#FFF7F3'); tg.setBackgroundColor('#FFF7F3'); } catch (e) {}
+}
+function haptic(type) {
+  try { tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(type || 'light'); } catch (e) {}
+}
+function askConfirm(msg, cb) {
+  if (tg && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) tg.showConfirm(msg, ok => ok && cb());
+  else if (window.confirm(msg)) cb();
+}
+
+// ---------- Данные ----------
+const KEY = 'mama_app_v1';
+const EMPTY = { feeds: [], pumps: [], activeFeed: null, activePump: null, pendingPump: null };
+let state = load();
+
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s) return Object.assign({}, EMPTY, s);
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(EMPTY));
+}
+function save() {
+  const cutoff = Date.now() - 30 * 864e5; // храним последние 30 дней
+  state.feeds = state.feeds.filter(f => f.end > cutoff);
+  state.pumps = state.pumps.filter(p => p.end > cutoff);
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+}
+const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+// ---------- Форматирование ----------
+const SIDE = { left: 'Левая', right: 'Правая', both: 'Обе' };
+const SIDE_FROM = { left: 'левой', right: 'правой' };
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2, '0');
+function fmtTimer(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
+  return h ? `${h}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`;
+}
+function fmtDur(ms) {
+  const m = Math.round(ms / 60000);
+  if (m < 1) return 'меньше минуты';
+  if (m < 60) return m + ' мин';
+  return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин';
+}
+function fmtTime(t) { const d = new Date(t); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+function ago(t) {
+  const m = Math.floor((Date.now() - t) / 60000);
+  if (m < 1) return 'только что';
+  if (m < 60) return m + ' мин назад';
+  return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин назад';
+}
+const isToday = t => new Date(t).toDateString() === new Date().toDateString();
+
+// ---------- Кормление ----------
+function lastFeed() {
+  return state.feeds.reduce((a, b) => (!a || b.end > a.end ? b : a), null);
+}
+function suggestedSide() {
+  const l = lastFeed();
+  return l ? (l.side === 'left' ? 'right' : 'left') : null;
+}
+function finishFeed() {
+  const a = state.activeFeed;
+  if (!a) return;
+  const end = Date.now();
+  if (end - a.start > 5000) state.feeds.push({ id: newId(), side: a.side, start: a.start, end });
+  state.activeFeed = null;
+}
+function startFeed(side) {
+  haptic('medium');
+  if (state.activeFeed) {
+    if (state.activeFeed.side === side) return;
+    finishFeed(); // смена груди
+  }
+  state.activeFeed = { side, start: Date.now() };
+  save(); render();
+}
+function stopFeed() { haptic('heavy'); finishFeed(); save(); render(); }
+
+// Прикладывания с паузой меньше 15 минут считаем одним кормлением
+function countFeedings(list) {
+  const sorted = list.slice().sort((a, b) => a.start - b.start);
+  let count = 0, prevEnd = 0;
+  sorted.forEach(f => { if (f.start - prevEnd > 15 * 60000) count++; prevEnd = f.end; });
+  return count;
+}
+
+function renderHint() {
+  const a = state.activeFeed, last = lastFeed();
+  let h;
+  if (a) h = '🍼 Идёт кормление. Чтобы сменить грудь — просто нажмите на другую кнопку.';
+  else if (last) h = `Последнее кормление: <b>${SIDE[last.side].toLowerCase()}</b> грудь, ${ago(last.end)}.<br>Сейчас лучше начать с <b>${SIDE_FROM[suggestedSide()]}</b> 👉`;
+  else h = '🌸 Здесь появится подсказка, с какой груди начать следующее кормление.';
+  $('#feedHint').innerHTML = h;
+}
+
+function renderFeed() {
+  const a = state.activeFeed, sug = suggestedSide();
+  document.querySelectorAll('#s-feed .btn-side').forEach(b => {
+    b.classList.toggle('on', !!a && a.side === b.dataset.side);
+    b.classList.toggle('suggest', !a && b.dataset.side === sug);
+  });
+  $('#feedStop').classList.toggle('hidden', !a);
+  $('#feedStatus').textContent = a
+    ? `${SIDE[a.side]} грудь · начали в ${fmtTime(a.start)}`
+    : 'Нажмите на грудь, с которой начинаете';
+  renderHint();
+  const today = state.feeds.filter(f => isToday(f.start));
+  $('#feedCount').textContent = countFeedings(today);
+  $('#feedTotal').textContent = fmtDur(today.reduce((s, f) => s + f.end - f.start, 0)).replace('меньше минуты', '0 мин');
+  $('#feedList').innerHTML = listHtml(today, 'feed');
+}
+
+// ---------- Сцеживание ----------
+let pumpSide = 'both';
+function togglePump() {
+  if (state.activePump) {
+    haptic('heavy');
+    const a = state.activePump;
+    state.pendingPump = { side: a.side, start: a.start, end: Date.now() };
+    state.activePump = null;
+  } else {
+    haptic('medium');
+    state.activePump = { side: pumpSide, start: Date.now() };
+  }
+  save(); render();
+  if (state.pendingPump) setTimeout(() => $('#pumpMl').focus(), 100);
+}
+function savePump(withMl) {
+  const p = state.pendingPump;
+  if (!p) return;
+  const ml = withMl ? Math.max(0, parseInt($('#pumpMl').value, 10) || 0) : 0;
+  state.pumps.push(Object.assign({ id: newId(), ml }, p));
+  state.pendingPump = null;
+  $('#pumpMl').value = '';
+  haptic('light'); save(); render();
+}
+function renderPump() {
+  const a = state.activePump;
+  document.querySelectorAll('#pumpSides .chip').forEach(c => {
+    c.classList.toggle('on', c.dataset.side === (a ? a.side : pumpSide));
+    c.disabled = !!a;
+  });
+  const btn = $('#pumpBtn');
+  btn.textContent = a ? 'Завершить сцеживание' : 'Начать сцеживание';
+  btn.classList.toggle('stop', !!a);
+  btn.classList.toggle('hidden', !!state.pendingPump);
+  $('#pumpStatus').textContent = a ? `${SIDE[a.side]} · начали в ${fmtTime(a.start)}` : 'Выберите сторону и нажмите «Начать»';
+  $('#pumpForm').classList.toggle('hidden', !state.pendingPump);
+  const today = state.pumps.filter(p => isToday(p.start));
+  $('#pumpCount').textContent = today.length;
+  $('#pumpMlTotal').textContent = today.reduce((s, p) => s + (p.ml || 0), 0) + ' мл';
+  $('#pumpList').innerHTML = listHtml(today, 'pump');
+}
+
+// ---------- Списки ----------
+function listHtml(items, kind) {
+  if (!items.length) return '<div class="empty">Пока ничего нет</div>';
+  return items.slice().sort((a, b) => b.start - a.start).map(i => `
+    <div class="item">
+      <div>
+        <div class="it">${fmtTime(i.start)} · ${SIDE[i.side]}${kind === 'pump' && i.ml ? ` · ${i.ml} мл` : ''}</div>
+        <div class="is">${fmtDur(i.end - i.start)}</div>
+      </div>
+      <button class="del" data-kind="${kind}" data-id="${i.id}" aria-label="Удалить">×</button>
+    </div>`).join('');
+}
+
+// ---------- Советы ----------
+const TIPS = [
+  { cat: 'Кормление', title: 'Как часто кормить', text: 'Новорождённые обычно едят 8–12 раз в сутки, в том числе ночью. Лучше ориентироваться на сигналы малыша — ищет грудь, причмокивает, тянет ручки ко рту, — а не на часы. Плач — это уже поздний признак голода.' },
+  { cat: 'Кормление', title: 'Правильное прикладывание', text: 'Ротик широко открыт, малыш захватывает не только сосок, но и большую часть ареолы, подбородок прижат к груди, губки вывёрнуты наружу. Сильная боль во время кормления — сигнал поправить захват или обратиться к консультанту по ГВ.' },
+  { cat: 'Кормление', title: 'Хватает ли малышу молока', text: 'Надёжные признаки после 5–6 дня жизни: 6 и больше мокрых подгузников в сутки, регулярный стул и прибавка в весе. «Мягкая грудь» не означает, что молока мало. Если есть сомнения — взвешивание у педиатра надёжнее ощущений.' },
+  { cat: 'Кормление', title: 'Как увеличить количество молока', text: 'Молоко вырабатывается по принципу «спрос — предложение»: чем чаще и полнее опорожняется грудь, тем больше его становится. Помогают частые прикладывания, ночные кормления и контакт кожа к коже. Специальные чаи и продукты сами по себе на выработку почти не влияют.' },
+  { cat: 'Кормление', title: 'Миф о «пустом» молоке', text: 'Грудное молоко не бывает «пустым» или «нежирным». В начале кормления оно более жидкое, а к концу становится жирнее. Поэтому полезно дать малышу как следует опорожнить одну грудь, прежде чем менять сторону.' },
+
+  { cat: 'Сцеживание', title: 'Хранение сцеженного молока', text: 'При комнатной температуре (до 25 °C) — до 4 часов. В холодильнике — до 4 дней. В морозилке — лучше использовать в течение 6 месяцев, допустимо до 12. Подписывайте на контейнере дату сцеживания.' },
+  { cat: 'Сцеживание', title: 'Как размораживать и подогревать', text: 'Размораживайте молоко в холодильнике или в тёплой воде, но не в микроволновке — она греет неравномерно и может обжечь малыша. Размороженное молоко используйте в течение 24 часов и не замораживайте повторно. Остатки после кормления нужно вылить в течение 2 часов.' },
+  { cat: 'Сцеживание', title: 'Как сцеживаться легче', text: 'Помогают тепло на грудь, лёгкий массаж, удобная расслабленная поза и фото или вещь малыша рядом. Мойте руки перед сцеживанием, а детали молокоотсоса — после каждого использования.' },
+  { cat: 'Сцеживание', title: 'Сколько сцеживать — «норма»?', text: 'Объём сцеживания сильно отличается у разных женщин и не показывает, сколько молока малыш получает напрямую из груди. Малыш высасывает молоко эффективнее любого молокоотсоса. Маленький объём — не повод для паники.' },
+
+  { cat: 'Питание', title: 'Особая диета не нужна', text: 'Кормящей маме подходит обычное разнообразное питание: овощи, фрукты, крупы, белок (мясо, рыба, яйца, бобовые), молочные продукты. Исключать продукты «на всякий случай» не нужно — только если у малыша есть явная реакция и это подтвердил врач.' },
+  { cat: 'Питание', title: 'Пейте по жажде', text: 'Держите бутылку воды рядом во время каждого кормления — жажда при ГВ возникает часто. Но пить «через силу» не нужно: на количество молока это не влияет.' },
+  { cat: 'Питание', title: 'Рыба и омега-3', text: 'Рыба 2–3 раза в неделю — полезно для мамы и малыша. Выбирайте виды с низким содержанием ртути: лосось, сардина, треска, минтай. Крупную хищную рыбу (меч-рыба, акула, королевская макрель) лучше избегать.' },
+  { cat: 'Питание', title: 'Кофе и алкоголь', text: 'Умеренное количество кофе (до 2–3 чашек в день) обычно считается безопасным — просто следите, не становится ли малыш беспокойнее. Самый безопасный вариант — не пить алкоголь, пока вы кормите грудью.' },
+  { cat: 'Питание', title: 'Витамины', text: 'Многим кормящим мамам врачи советуют продолжать приём витаминов, например йода и витамина D. Что нужно именно вам — лучше уточнить у врача, а не подбирать самостоятельно.' },
+
+  { cat: 'Восстановление', title: 'Мышцы тазового дна', text: 'Упражнения Кегеля обычно можно начинать вскоре после родов без осложнений, если нет боли. Напрягите мышцы так, будто сдерживаете мочеиспускание, на 3–5 секунд, затем расслабьтесь. 10 повторов 3 раза в день — их удобно делать прямо во время кормления.' },
+  { cat: 'Восстановление', title: 'Дыхание и мышцы живота', text: 'Начните с дыхания животом лёжа: на вдохе живот поднимается, на выдохе мягко подтягивайте его к позвоночнику. Скручивания и планку отложите, пока врач не проверит, нет ли расхождения мышц живота (диастаза).' },
+  { cat: 'Восстановление', title: 'Прогулки', text: 'Ходьба — лучший старт: начните с 10–15 минут и постепенно увеличивайте время. Прогулка с коляской тоже считается!' },
+  { cat: 'Восстановление', title: 'Когда можно спорт', text: 'К активным тренировкам обычно возвращаются после осмотра у врача, примерно через 6–8 недель после родов. После кесарева сечения сроки могут быть дольше — ориентируйтесь на рекомендации своего врача.' },
+  { cat: 'Восстановление', title: 'Береги спину при кормлении', text: 'Подкладывайте подушки под руку и спину и подносите малыша к груди, а не наклоняйтесь к нему. Так шея и спина будут меньше уставать.' },
+
+  { cat: 'К врачу', title: 'Когда нужен врач', text: 'Обратитесь к врачу, если: температура выше 38 °C; в груди болезненное красное уплотнение, которое не проходит за сутки; сильное кровотечение; у малыша мало мокрых подгузников, он вялый или сильно желтеет.' },
+  { cat: 'К врачу', title: 'Настроение после родов', text: 'Плаксивость и перепады настроения в первые 2 недели после родов бывают у многих. Если подавленность, тревога или безразличие длятся дольше или мешают жить — поговорите с врачом. Это лечится, и просить о помощи — нормально.' },
+  { cat: 'К врачу', title: 'Консультант по ГВ', text: 'Если кормление болезненное или есть сомнения, всё ли идёт хорошо, — консультант по грудному вскармливанию поможет наладить процесс. Чем раньше обратиться, тем проще.' },
+];
+const CATS = [...new Set(TIPS.map(t => t.cat))];
+let tipCat = CATS[0];
+function renderTips() {
+  $('#tipCats').innerHTML = CATS.map(c => `<button class="chip ${c === tipCat ? 'on' : ''}" data-cat="${c}">${c}</button>`).join('');
+  $('#tipList').innerHTML = TIPS.filter(t => t.cat === tipCat).map(t =>
+    `<details class="card tip"><summary>${t.title}</summary><p>${t.text}</p></details>`).join('');
+}
+
+// ---------- Вкладки ----------
+function showTab(tab) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === 's-' + tab));
+  window.scrollTo(0, 0);
+  haptic('light');
+}
+
+// ---------- События ----------
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+document.querySelectorAll('#s-feed .btn-side').forEach(b => b.onclick = () => startFeed(b.dataset.side));
+$('#feedStop').onclick = stopFeed;
+document.querySelectorAll('#pumpSides .chip').forEach(c => c.onclick = () => { pumpSide = c.dataset.side; haptic('light'); renderPump(); });
+$('#pumpBtn').onclick = togglePump;
+$('#pumpSave').onclick = () => savePump(true);
+$('#pumpSkip').onclick = () => savePump(false);
+document.querySelectorAll('.quick button').forEach(b => b.onclick = () => {
+  const inp = $('#pumpMl');
+  inp.value = (parseInt(inp.value, 10) || 0) + Number(b.dataset.add);
+  haptic('light');
+});
+$('#tipCats').onclick = e => {
+  const c = e.target.closest('.chip');
+  if (c) { tipCat = c.dataset.cat; haptic('light'); renderTips(); }
+};
+$('#toStorage').onclick = () => { tipCat = 'Сцеживание'; renderTips(); showTab('tips'); };
+document.addEventListener('click', e => {
+  const d = e.target.closest('.del');
+  if (!d) return;
+  askConfirm('Удалить эту запись?', () => {
+    const list = d.dataset.kind === 'feed' ? 'feeds' : 'pumps';
+    state[list] = state[list].filter(i => i.id !== d.dataset.id);
+    save(); render();
+  });
+});
+
+// ---------- Запуск ----------
+function render() { renderFeed(); renderPump(); }
+function tick() {
+  const now = Date.now();
+  $('#feedTimer').textContent = state.activeFeed ? fmtTimer(now - state.activeFeed.start) : '00:00';
+  $('#pumpTimer').textContent = state.activePump ? fmtTimer(now - state.activePump.start) : '00:00';
+  renderHint();
+}
+
+const user = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+if (user && user.first_name) $('#hello').textContent = `Привет, ${user.first_name}! 🌸`;
+const dateStr = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+$('#todayLabel').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+render(); renderTips(); tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
