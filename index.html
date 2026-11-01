@@ -165,6 +165,25 @@
   .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--strong-bg);color:var(--strong-fg);padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
   .toast.show{opacity:1}
 
+  /* Приветствие */
+  .onb{position:fixed;inset:0;background:var(--bg);z-index:70;display:flex;flex-direction:column;padding:24px 20px calc(24px + env(safe-area-inset-bottom))}
+  .onb .slide{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:420px;margin:0 auto}
+  .onb .big-e{width:120px;height:120px;border-radius:50%;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:58px;margin-bottom:28px}
+  .onb h2{font-size:26px;font-weight:800;margin-bottom:12px;line-height:1.2}
+  .onb p{font-size:16px;line-height:1.5;color:var(--muted)}
+  .dots{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
+  .dots span{width:8px;height:8px;border-radius:99px;background:var(--line);transition:all .2s}
+  .dots span.on{width:24px;background:var(--primary)}
+  .onb .actions{max-width:420px;width:100%;margin:0 auto}
+  .skip{background:none;border:none;font:inherit;font-weight:700;color:var(--muted);padding:12px;width:100%;cursor:pointer;margin-top:4px}
+
+  /* О приложении */
+  .about p{font-size:15px;line-height:1.55;margin-bottom:10px}
+  .about p:last-child{margin-bottom:0}
+  .about ul{padding-left:20px;font-size:15px;line-height:1.55;margin-bottom:10px}
+  .btn-danger{background:none;border:2px solid var(--primary);color:var(--primary)}
+  .ver{text-align:center;font-size:12px;color:var(--muted);padding:4px 0 16px}
+
   /* Окно профиля */
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;z-index:50}
   .sheet{background:var(--bg);width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
@@ -319,8 +338,38 @@
       <button class="tile" data-go="menu"><span class="e">🥗</span><b>Меню на день</b><span class="d">Что приготовить</span></button>
       <button class="tile" data-go="recovery"><span class="e">💪</span><b>Восстановление</b><span class="d">Упражнения по неделям</span></button>
       <button class="tile" data-go="tips"><span class="e">💡</span><b>Советы</b><span class="d">Кормление, питание, врач</span></button>
-      <button class="tile" data-go="report" style="grid-column:1/-1"><span class="e">📄</span><b>Отчёт для педиатра</b><span class="d">Сводка за 7 дней одной кнопкой</span></button>
+      <button class="tile" data-go="report"><span class="e">📄</span><b>Отчёт врачу</b><span class="d">Сводка за 7 дней</span></button>
+      <button class="tile" data-go="about"><span class="e">🔒</span><b>О приложении</b><span class="d">Данные и конфиденциальность</span></button>
     </div>
+  </section>
+
+  <!-- ===== О ПРИЛОЖЕНИИ ===== -->
+  <section class="screen" id="s-about">
+    <button class="back" data-back>← Назад</button>
+    <h2 class="page">🔒 О приложении</h2>
+    <div class="card about">
+      <h3>🌸 «Мама рядом»</h3>
+      <p>Помощник для кормящих мам: кормления, сцеживание, сон и подгузники малыша в одном месте, а также советы, меню и упражнения для восстановления после родов.</p>
+    </div>
+    <div class="card about">
+      <h3>Конфиденциальность</h3>
+      <p>Мы бережно относимся к вашим данным:</p>
+      <ul>
+        <li>Все записи (кормления, сон, подгузники, профиль малыша) хранятся <b>только на вашем устройстве</b>.</li>
+        <li>Приложение никуда их не отправляет: у нас нет сервера и базы данных с вашей информацией.</li>
+        <li>Telegram передаёт приложению только ваше имя, чтобы поздороваться. Оно не сохраняется и никуда не передаётся.</li>
+        <li>Отчёт для педиатра уходит только туда, куда вы сами его отправите.</li>
+      </ul>
+      <p>Если удалить Telegram или очистить его кэш, записи могут пропасть.</p>
+      <p id="contactLine" class="hidden"></p>
+    </div>
+    <div class="card about">
+      <h3>Важно</h3>
+      <p>Советы в приложении основаны на общих рекомендациях ВОЗ и педиатров и носят информационный характер. Они не заменяют консультацию врача. Если что-то беспокоит вас или малыша — обратитесь к специалисту.</p>
+    </div>
+    <button class="btn btn-soft" id="replayOnb" style="margin-bottom:10px">Показать приветствие ещё раз</button>
+    <button class="btn btn-danger" id="wipeData">Удалить все мои данные</button>
+    <div class="ver" style="margin-top:12px">Версия 1.0</div>
   </section>
 
   <!-- ===== СТАТИСТИКА ===== -->
@@ -384,6 +433,20 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ===== ПРИВЕТСТВИЕ ===== -->
+<div class="onb hidden" id="onb">
+  <div class="slide">
+    <div class="big-e" id="onbE"></div>
+    <h2 id="onbTitle"></h2>
+    <p id="onbText"></p>
+  </div>
+  <div class="actions">
+    <div class="dots" id="onbDots"></div>
+    <button class="btn btn-pink" id="onbNext">Далее</button>
+    <button class="skip" id="onbSkip">Пропустить</button>
+  </div>
+</div>
 
 <!-- ===== ОКНО НАСТРОЕК ===== -->
 <div class="overlay hidden" id="settings">
@@ -1040,6 +1103,50 @@ function shareReport() {
   window.open(link, '_blank');
 }
 
+// ---------- Приветствие ----------
+const ONB = [
+  { e: '🌸', t: 'Добро пожаловать в «Мама рядом»', p: 'Помощник для кормящей мамы: кормления, сцеживание, сон и подгузники малыша — всё в одном месте.' },
+  { e: '🍼', t: 'Одно касание — и запись готова', p: 'Нажмите «Левая» или «Правая», когда начинаете кормить. Приложение запомнит и подскажет, с какой груди начать в следующий раз.' },
+  { e: '💡', t: 'Советы, меню и восстановление', p: 'Проверенные советы по рекомендациям ВОЗ и педиатров, меню на день и мягкие упражнения после родов. Приложение не заменяет врача, но помогает не забывать важное.' },
+  { e: '🔒', t: 'Ваши данные — только ваши', p: 'Все записи хранятся только на вашем телефоне и никуда не отправляются.' }
+];
+let onbStep = 0;
+function renderOnb() {
+  const s = ONB[onbStep];
+  $('#onbE').textContent = s.e;
+  $('#onbTitle').textContent = s.t;
+  $('#onbText').textContent = s.p;
+  $('#onbDots').innerHTML = ONB.map((_, i) => `<span class="${i === onbStep ? 'on' : ''}"></span>`).join('');
+  const last = onbStep === ONB.length - 1;
+  $('#onbNext').textContent = last ? (state.baby ? 'Начать' : 'Добавить малыша') : 'Далее';
+  $('#onbSkip').textContent = last && !state.baby ? 'Позже' : 'Пропустить';
+}
+function openOnb() { onbStep = 0; renderOnb(); $('#onb').classList.remove('hidden'); }
+function closeOnb(openProfile) {
+  state.onboarded = true; save();
+  $('#onb').classList.add('hidden');
+  showTab('home');
+  if (openProfile) openSettings();
+}
+
+// ---------- О приложении ----------
+const CONTACT = ''; // сюда можно вписать контакт для вопросов, например '@username'
+if (CONTACT) {
+  $('#contactLine').textContent = 'Вопросы и предложения: ' + CONTACT;
+  $('#contactLine').classList.remove('hidden');
+}
+function wipeData() {
+  askConfirm('Удалить все записи и профиль малыша? Это действие нельзя отменить.', () => {
+    const theme = state.settings.theme;
+    state = DEFAULTS();
+    state.settings.theme = theme;
+    state.onboarded = true;
+    save(); render(); renderRecovery();
+    toast('Все данные удалены');
+    showTab('home');
+  });
+}
+
 // ---------- Настройки ----------
 let draftTheme = 'auto';
 function openSettings() {
@@ -1122,6 +1229,14 @@ $('#tipCats').onclick = e => {
   if (c) { tipCat = c.dataset.cat; haptic('light'); renderTips(); }
 };
 $('#toStorage').onclick = () => { tipCat = 'Сцеживание'; renderTips(); showTab('tips'); };
+$('#onbNext').onclick = () => {
+  haptic('light');
+  if (onbStep < ONB.length - 1) { onbStep++; renderOnb(); }
+  else closeOnb(!state.baby);
+};
+$('#onbSkip').onclick = () => closeOnb(false);
+$('#replayOnb').onclick = openOnb;
+$('#wipeData').onclick = wipeData;
 $('#reportCopy').onclick = () => copyText(buildReport());
 $('#reportShare').onclick = shareReport;
 $('#openSettings').onclick = openSettings;
@@ -1161,6 +1276,11 @@ $('#todayLabel').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1
 
 applyTheme(); render(); renderTips(); tick();
 setInterval(tick, 1000);
+// Приветствие показываем только новым пользователям (у кого ещё нет записей)
+if (!state.onboarded) {
+  const hasData = state.feeds.length || state.pumps.length || state.diapers.length || state.sleeps.length || state.baby;
+  if (hasData) { state.onboarded = true; save(); } else openOnb();
+}
 </script>
 </body>
 </html>
