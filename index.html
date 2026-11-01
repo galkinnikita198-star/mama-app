@@ -10,32 +10,53 @@
 <style>
   :root{
     --bg:#FFF7F3; --card:#FFFFFF; --primary:#E07A6F; --primary-soft:#FCE6E1;
-    --sage:#5E9A82; --sage-soft:#E3F1EB; --text:#3B2A28; --muted:#8E7773; --line:#F3E4DF;
+    --sage:#5E9A82; --sage-soft:#E3F1EB; --blue:#4F86CF; --blue-soft:#E4EEFB;
+    --amber:#B9802F; --amber-soft:#F8EDDC; --violet:#7B6BC9; --violet-soft:#ECE9FA;
+    --text:#3B2A28; --muted:#8E7773; --line:#F3E4DF;
+    --strong-bg:#3B2A28; --strong-fg:#FFFFFF; --shadow:0 2px 12px rgba(180,120,110,.08);
+    color-scheme:light;
+  }
+  html.dark{
+    --bg:#1C1615; --card:#2A2120; --primary:#F08F84; --primary-soft:#3F2926;
+    --sage:#7FC0A6; --sage-soft:#20332C; --blue:#82AAEA; --blue-soft:#1E2A3D;
+    --amber:#E0AE64; --amber-soft:#3A2D1C; --violet:#A99BEA; --violet-soft:#2A2640;
+    --text:#F4E9E6; --muted:#B39E99; --line:#3A2E2C;
+    --strong-bg:#F4E9E6; --strong-fg:#2A2120; --shadow:none;
+    color-scheme:dark;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{font-family:'Nunito',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:96px}
-  header{padding:20px 16px 6px}
+  body{font-family:'Nunito',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:96px;transition:background .2s}
+  .wrap{max-width:560px;margin:0 auto}
+  header{padding:20px 16px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
   h1{font-size:24px;font-weight:800}
-  h3{font-size:16px;font-weight:800;margin-bottom:6px}
+  h2.page{font-size:22px;font-weight:800;margin:4px 0 12px}
+  h3{font-size:16px;font-weight:800;margin-bottom:8px}
   .sub{color:var(--muted);font-size:14px;margin-top:2px}
+  .icon-btn{background:var(--card);border:none;border-radius:14px;width:44px;height:44px;font-size:20px;cursor:pointer;box-shadow:var(--shadow);flex:none}
   main{padding:8px 16px}
   .screen{display:none}.screen.active{display:block}
   .hidden{display:none!important}
-  .card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(180,120,110,.08)}
+  .card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
   .hint{background:var(--primary-soft);box-shadow:none;font-size:15px;line-height:1.45}
+  .hint.violet{background:var(--violet-soft)}
+  .note{font-size:13px;color:var(--muted);line-height:1.4;margin-top:10px}
+  .back{background:none;border:none;font:inherit;font-weight:800;color:var(--primary);font-size:15px;padding:4px 0 6px;cursor:pointer}
   .timer{font-size:54px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;color:var(--primary);margin-top:4px}
-  .timer.sage{color:var(--sage)}
+  .timer.sage{color:var(--sage)} .timer.violet{color:var(--violet)}
   .status{text-align:center;color:var(--muted);font-size:14px;margin:2px 0 14px}
   .btn{border:none;border-radius:16px;padding:16px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;width:100%;transition:transform .1s}
-  .btn:active{transform:scale(.97)}
+  .btn:active,.icon-btn:active,.dbtn:active,.tile:active{transform:scale(.96)}
   .sides{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .btn-side{background:var(--primary-soft);color:var(--primary);border:2px solid transparent;padding:22px 10px}
   .btn-side.suggest{border-color:var(--primary)}
   .btn-side.on{background:var(--primary);color:#fff}
-  .btn-stop{margin-top:10px;background:var(--text);color:#fff}
+  .btn-stop{margin-top:10px;background:var(--strong-bg);color:var(--strong-fg)}
   .btn-main{background:var(--sage);color:#fff}
-  .btn-main.stop{background:var(--text)}
+  .btn-main.stop,.btn-violet.stop{background:var(--strong-bg);color:var(--strong-fg)}
+  .btn-violet{background:var(--violet);color:#fff}
+  .btn-pink{background:var(--primary);color:#fff}
   .btn-ghost{background:var(--sage-soft);color:var(--sage)}
+  .btn-soft{background:var(--primary-soft);color:var(--primary)}
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .stat .n{font-size:24px;font-weight:800}
   .stat .l{font-size:13px;color:var(--muted)}
@@ -53,8 +74,10 @@
   .chip.on{background:var(--sage);color:#fff}
   .chips.scroll .chip.on{background:var(--primary);color:#fff}
   .chip:disabled{opacity:.5}
+  input[type=number],input[type=text],input[type=date]{font:inherit;font-size:17px;font-weight:700;padding:12px 14px;border:2px solid var(--line);border-radius:14px;color:var(--text);background:var(--card);width:100%;outline:none}
+  input:focus{border-color:var(--primary)}
   .ml-row{display:flex;align-items:center;gap:8px;margin:8px 0}
-  .ml-row input{flex:1;font:inherit;font-size:28px;font-weight:800;padding:10px 14px;border:2px solid var(--line);border-radius:14px;color:var(--text);width:100%;outline:none}
+  .ml-row input{font-size:28px;font-weight:800}
   .ml-row input:focus{border-color:var(--sage)}
   .ml-row span{font-weight:700;color:var(--muted)}
   .quick{display:flex;gap:8px;margin-bottom:12px}
@@ -67,23 +90,162 @@
   details.tip[open] summary::after{content:'−'}
   details.tip p{margin-top:10px;line-height:1.5;font-size:15px}
   .disclaimer{font-size:12px;color:var(--muted);text-align:center;line-height:1.4;padding:8px 8px 16px}
-  nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding:6px 0 calc(8px + env(safe-area-inset-bottom))}
-  nav button{background:none;border:none;font:inherit;color:var(--muted);font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;cursor:pointer}
-  nav button .ico{font-size:22px;filter:grayscale(1);opacity:.6}
+
+  /* Главная */
+  .baby{display:flex;gap:14px;align-items:center}
+  .baby .ava{width:56px;height:56px;border-radius:50%;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:28px;flex:none}
+  .baby .name{font-size:20px;font-weight:800}
+  .baby .age{color:var(--primary);font-weight:700;font-size:15px}
+  .age-tip{margin-top:12px;background:var(--primary-soft);border-radius:14px;padding:12px;font-size:14px;line-height:1.45}
+  .card-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .card-head h3{margin:0}
+  .card-head .meta{font-size:14px;color:var(--muted);font-weight:700}
+  .dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .dbtn{border:none;border-radius:16px;padding:14px 6px;font:inherit;font-weight:800;font-size:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform .1s}
+  .dbtn .e{font-size:24px}
+  .d-wet{background:var(--blue-soft);color:var(--blue)}
+  .d-dirty{background:var(--amber-soft);color:var(--amber)}
+  .d-both{background:var(--primary-soft);color:var(--primary)}
+  .dcount{display:flex;gap:18px;margin-top:12px;font-size:15px}
+  .dcount b{font-size:20px}
+  .progress{height:8px;background:var(--line);border-radius:99px;margin-top:8px;overflow:hidden}
+  .progress div{height:100%;background:var(--blue);border-radius:99px;transition:width .3s}
+  .progress.sage div{background:var(--sage)}
+  .water{display:flex;align-items:center;gap:12px}
+  .water .big{font-size:34px;font-weight:800;color:var(--blue)}
+  .water .ml{color:var(--muted);font-size:14px;font-weight:700}
+  .water .grow{flex:1}
+  .wbtn{border:none;border-radius:16px;padding:14px 16px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;background:var(--blue);color:#fff}
+  .wminus{border:none;border-radius:16px;width:48px;height:50px;font:inherit;font-weight:800;font-size:20px;cursor:pointer;background:var(--blue-soft);color:var(--blue)}
+  .glasses{font-size:20px;letter-spacing:2px;margin-top:8px;min-height:24px;word-break:break-all}
+  .summary .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px;cursor:pointer}
+  .summary .row:last-child{border-bottom:none}
+  .summary .row b{font-weight:800}
+
+  /* Ещё */
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .tile{background:var(--card);border:none;border-radius:20px;padding:18px 14px;text-align:left;font:inherit;color:var(--text);cursor:pointer;box-shadow:var(--shadow);transition:transform .1s}
+  .tile .e{font-size:30px;display:block;margin-bottom:8px}
+  .tile b{display:block;font-size:16px;font-weight:800}
+  .tile span.d{font-size:13px;color:var(--muted)}
+
+  /* Статистика */
+  .bars{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:170px;margin-top:8px}
+  .bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .bar .v{font-size:12px;font-weight:800;margin-bottom:4px;white-space:nowrap}
+  .bar .col{width:100%;max-width:36px;border-radius:10px 10px 4px 4px;background:var(--primary);min-height:4px;transition:height .3s}
+  .bar.today .col{opacity:.55}
+  .bar .lbl{font-size:12px;color:var(--muted);margin-top:6px;font-weight:700}
+  .avg{display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:15px}
+  .avg b{font-weight:800}
+
+  /* Меню */
+  .meal{display:flex;gap:12px;align-items:flex-start}
+  .meal .e{font-size:28px;flex:none;width:44px;height:44px;border-radius:14px;background:var(--sage-soft);display:flex;align-items:center;justify-content:center}
+  .meal .grow{flex:1}
+  .meal .t{font-size:13px;color:var(--muted);font-weight:700}
+  .meal .n{font-size:16px;font-weight:700;line-height:1.35;margin-top:2px}
+  .shuffle{background:var(--sage-soft);border:none;border-radius:12px;width:40px;height:40px;font-size:18px;cursor:pointer;flex:none}
+
+  /* Восстановление */
+  .stage{border:2px solid transparent}
+  .stage.current{border-color:var(--sage)}
+  .stage .badge{display:inline-block;background:var(--sage);color:#fff;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;margin-bottom:8px}
+  .ex{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+  .ex:last-child{border-bottom:none}
+  .check{width:30px;height:30px;border-radius:50%;border:2px solid var(--sage);background:none;flex:none;cursor:pointer;color:#fff;font-size:16px;font-weight:800;margin-top:2px}
+  .check.on{background:var(--sage)}
+  .ex .n{font-weight:800}
+  .ex .h{font-size:14px;line-height:1.45;margin-top:3px}
+  .ex .r{font-size:13px;color:var(--sage);font-weight:700;margin-top:4px}
+  .warn{background:var(--amber-soft);border-radius:14px;padding:12px;font-size:14px;line-height:1.45}
+
+  /* Отчёт */
+  .report{white-space:pre-wrap;font-size:14px;line-height:1.5;background:var(--bg);border-radius:14px;padding:12px;max-height:340px;overflow:auto}
+  .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--strong-bg);color:var(--strong-fg);padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+
+  /* Окно профиля */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+  .sheet{background:var(--bg);width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
+  .sheet h2{font-size:20px;font-weight:800;margin-bottom:14px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:6px}
+  .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--card);padding:4px;border-radius:14px}
+  .seg button{border:none;border-radius:10px;padding:10px 4px;font:inherit;font-weight:700;font-size:14px;background:none;color:var(--muted);cursor:pointer}
+  .seg button.on{background:var(--primary);color:#fff}
+
+  nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding:6px 0 calc(8px + env(safe-area-inset-bottom));z-index:10}
+  nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+  nav button{background:none;border:none;font:inherit;color:var(--muted);font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;cursor:pointer}
+  nav button .ico{font-size:22px;filter:grayscale(1);opacity:.55}
   nav button.active{color:var(--primary)}
   nav button.active .ico{filter:none;opacity:1}
 </style>
 </head>
 <body>
+<div class="wrap">
 
 <header>
-  <h1 id="hello">Привет! 🌸</h1>
-  <div class="sub" id="todayLabel"></div>
+  <div>
+    <h1 id="hello">Привет! 🌸</h1>
+    <div class="sub" id="todayLabel"></div>
+  </div>
+  <button class="icon-btn" id="openSettings" aria-label="Настройки">⚙️</button>
 </header>
 
 <main>
+  <!-- ===== СЕГОДНЯ ===== -->
+  <section class="screen active" id="s-home">
+    <div class="card" id="babyCard"></div>
+
+    <div class="card">
+      <div class="card-head"><h3>🧷 Подгузники</h3><span class="meta" id="diaperTotal"></span></div>
+      <div class="dgrid">
+        <button class="dbtn d-wet" data-diaper="wet"><span class="e">💧</span>Мокрый</button>
+        <button class="dbtn d-dirty" data-diaper="dirty"><span class="e">💩</span>Грязный</button>
+        <button class="dbtn d-both" data-diaper="both"><span class="e">✨</span>Оба</button>
+      </div>
+      <div class="dcount">
+        <span>💧 мокрых: <b id="wetCount">0</b></span>
+        <span>💩 грязных: <b id="dirtyCount">0</b></span>
+      </div>
+      <div id="wetNorm">
+        <div class="progress"><div id="wetBar" style="width:0"></div></div>
+        <div class="note" id="wetNote"></div>
+      </div>
+      <details class="tip" style="margin-top:12px">
+        <summary style="font-size:14px">История за сегодня</summary>
+        <div id="diaperList" style="margin-top:6px"></div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h3>💧 Вода для мамы</h3>
+      <div class="water">
+        <div class="grow">
+          <div class="big" id="waterCount">0</div>
+          <div class="ml" id="waterMl">стаканов · 0 мл</div>
+        </div>
+        <button class="wminus" id="waterMinus" aria-label="Убрать стакан">−</button>
+        <button class="wbtn" id="waterPlus">+ стакан</button>
+      </div>
+      <div class="glasses" id="glasses"></div>
+      <div class="note">Пейте по жажде. Удобно держать воду рядом при каждом кормлении.</div>
+    </div>
+
+    <div class="card summary">
+      <h3>📋 Кратко за сегодня</h3>
+      <div class="row" data-go="feed"><span>🍼 Кормлений</span><b id="sumFeed">0</b></div>
+      <div class="row" data-go="feed"><span>⏱ Последнее кормление</span><b id="sumLast">—</b></div>
+      <div class="row" data-go="sleep"><span>😴 Сон за сегодня</span><b id="sumSleep">0 мин</b></div>
+      <div class="row" data-go="pump"><span>🧴 Сцежено</span><b id="sumPump">0 мл</b></div>
+      <div class="row" data-go="recovery"><span>💪 Упражнения</span><b id="sumEx">—</b></div>
+    </div>
+  </section>
+
   <!-- ===== КОРМЛЕНИЕ ===== -->
-  <section class="screen active" id="s-feed">
+  <section class="screen" id="s-feed">
     <div class="card hint" id="feedHint"></div>
     <div class="card">
       <div class="timer" id="feedTimer">00:00</div>
@@ -130,59 +292,208 @@
     <button class="link" id="toStorage">Как хранить сцеженное молоко →</button>
   </section>
 
+  <!-- ===== СОН ===== -->
+  <section class="screen" id="s-sleep">
+    <div class="card hint violet" id="sleepHint"></div>
+    <div class="card">
+      <div class="timer violet" id="sleepTimer">00:00</div>
+      <div class="status" id="sleepStatus"></div>
+      <button class="btn btn-violet" id="sleepBtn">😴 Малыш уснул</button>
+    </div>
+    <div class="stats">
+      <div class="card stat"><div class="n" id="sleepCount">0</div><div class="l">снов сегодня</div></div>
+      <div class="card stat"><div class="n" id="sleepTotal">0 мин</div><div class="l">всего сна сегодня</div></div>
+    </div>
+    <div class="card"><h3>Сегодня</h3><div id="sleepList"></div></div>
+    <div class="card">
+      <h3>🛏 Безопасный сон</h3>
+      <p style="font-size:14px;line-height:1.5">Укладывайте малыша спать на спину, на ровный твёрдый матрас в своей кроватке — без подушек, одеял, бортиков и игрушек. Новорождённые спят много — обычно 14–17 часов в сутки, короткими отрезками, и это нормально.</p>
+    </div>
+  </section>
+
+  <!-- ===== ЕЩЁ ===== -->
+  <section class="screen" id="s-more">
+    <h2 class="page">Ещё</h2>
+    <div class="tiles">
+      <button class="tile" data-go="stats"><span class="e">📊</span><b>Статистика</b><span class="d">Графики за неделю</span></button>
+      <button class="tile" data-go="menu"><span class="e">🥗</span><b>Меню на день</b><span class="d">Что приготовить</span></button>
+      <button class="tile" data-go="recovery"><span class="e">💪</span><b>Восстановление</b><span class="d">Упражнения по неделям</span></button>
+      <button class="tile" data-go="tips"><span class="e">💡</span><b>Советы</b><span class="d">Кормление, питание, врач</span></button>
+      <button class="tile" data-go="report" style="grid-column:1/-1"><span class="e">📄</span><b>Отчёт для педиатра</b><span class="d">Сводка за 7 дней одной кнопкой</span></button>
+    </div>
+  </section>
+
+  <!-- ===== СТАТИСТИКА ===== -->
+  <section class="screen" id="s-stats">
+    <button class="back" data-back>← Назад</button>
+    <h2 class="page">📊 Статистика за неделю</h2>
+    <div class="chips scroll" id="statCats"></div>
+    <div class="card">
+      <h3 id="statTitle"></h3>
+      <div class="bars" id="bars"></div>
+      <div class="avg"><span>В среднем за день</span><b id="statAvg">—</b></div>
+      <div class="note">Сегодняшний день ещё не закончился, поэтому его столбик бледнее.</div>
+    </div>
+  </section>
+
+  <!-- ===== МЕНЮ ===== -->
+  <section class="screen" id="s-menu">
+    <button class="back" data-back>← Назад</button>
+    <h2 class="page">🥗 Меню на сегодня</h2>
+    <div id="menuList"></div>
+    <button class="btn btn-ghost" id="menuAll">🔄 Новое меню целиком</button>
+    <div class="card hint" style="margin-top:12px">Кормящей маме не нужна особая диета: подойдёт обычное разнообразное питание. Исключайте продукты, только если на них есть реакция у вас или у малыша и это подтвердил врач.</div>
+  </section>
+
+  <!-- ===== ВОССТАНОВЛЕНИЕ ===== -->
+  <section class="screen" id="s-recovery">
+    <button class="back" data-back>← Назад</button>
+    <h2 class="page">💪 Восстановление</h2>
+    <div class="card">
+      <div class="card-head"><h3>Сегодня</h3><span class="meta" id="exToday"></span></div>
+      <div class="progress sage"><div id="exBar" style="width:0"></div></div>
+      <div class="note" id="exWeek"></div>
+    </div>
+    <div id="stages"></div>
+    <div class="warn" style="margin-bottom:12px">⚠️ Прекратите упражнение и обратитесь к врачу, если появились боль, усилилось кровотечение, подтекает моча или есть чувство тяжести внизу живота. После кесарева сечения или осложнённых родов сначала посоветуйтесь с врачом.</div>
+  </section>
+
   <!-- ===== СОВЕТЫ ===== -->
   <section class="screen" id="s-tips">
+    <button class="back" data-back>← Назад</button>
+    <h2 class="page">💡 Советы</h2>
     <div class="chips scroll" id="tipCats"></div>
     <div id="tipList"></div>
     <p class="disclaimer">Советы носят информационный характер и основаны на общих рекомендациях ВОЗ и педиатров. Они не заменяют консультацию врача. Если что-то беспокоит — обратитесь к специалисту.</p>
   </section>
-</main>
 
-<nav>
-  <button class="active" data-tab="feed"><span class="ico">🍼</span>Кормление</button>
+  <!-- ===== ОТЧЁТ ===== -->
+  <section class="screen" id="s-report">
+    <button class="back" data-back>← Назад</button>
+    <h2 class="page">📄 Отчёт для педиатра</h2>
+    <div class="card">
+      <div class="report" id="reportText"></div>
+      <div class="row2" style="margin-top:12px">
+        <button class="btn btn-soft" id="reportCopy">Скопировать</button>
+        <button class="btn btn-pink" id="reportShare">Отправить</button>
+      </div>
+      <div class="note">Отправьте отчёт врачу в мессенджер или покажите его на приёме — так проще отвечать на вопросы «сколько раз ест» и «сколько спит».</div>
+    </div>
+  </section>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== ОКНО НАСТРОЕК ===== -->
+<div class="overlay hidden" id="settings">
+  <div class="sheet">
+    <h2>Профиль и настройки</h2>
+    <div class="field">
+      <label for="babyName">Имя малыша</label>
+      <input type="text" id="babyName" placeholder="Например, Миша" maxlength="30">
+    </div>
+    <div class="field">
+      <label for="babyBirth">Дата рождения</label>
+      <input type="date" id="babyBirth">
+    </div>
+    <div class="field">
+      <label>Тема оформления</label>
+      <div class="seg" id="themeSeg">
+        <button data-theme="auto">Авто</button>
+        <button data-theme="light">☀️ Светлая</button>
+        <button data-theme="dark">🌙 Тёмная</button>
+      </div>
+    </div>
+    <div class="row2" style="margin-top:20px">
+      <button class="btn btn-ghost" id="settingsCancel">Отмена</button>
+      <button class="btn btn-pink" id="settingsSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<nav><div class="in">
+  <button class="active" data-tab="home"><span class="ico">🏠</span>Сегодня</button>
+  <button data-tab="feed"><span class="ico">🍼</span>Кормление</button>
   <button data-tab="pump"><span class="ico">🧴</span>Сцеживание</button>
-  <button data-tab="tips"><span class="ico">💡</span>Советы</button>
-</nav>
+  <button data-tab="sleep"><span class="ico">😴</span>Сон</button>
+  <button data-tab="more"><span class="ico">☰</span>Ещё</button>
+</div></nav>
 
 <script>
 // ---------- Telegram ----------
 const tg = window.Telegram && window.Telegram.WebApp;
-if (tg) {
-  try { tg.ready(); tg.expand(); tg.setHeaderColor('#FFF7F3'); tg.setBackgroundColor('#FFF7F3'); } catch (e) {}
-}
+const inTelegram = !!(tg && tg.platform && tg.platform !== 'unknown');
+if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
 function haptic(type) {
-  try { tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(type || 'light'); } catch (e) {}
+  try { inTelegram && tg.HapticFeedback.impactOccurred(type || 'light'); } catch (e) {}
 }
 function askConfirm(msg, cb) {
-  if (tg && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) tg.showConfirm(msg, ok => ok && cb());
+  if (inTelegram && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) tg.showConfirm(msg, ok => ok && cb());
   else if (window.confirm(msg)) cb();
+}
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 1800);
 }
 
 // ---------- Данные ----------
 const KEY = 'mama_app_v1';
-const EMPTY = { feeds: [], pumps: [], activeFeed: null, activePump: null, pendingPump: null };
+const DEFAULTS = () => ({
+  feeds: [], pumps: [], diapers: [], water: [], sleeps: [],
+  activeFeed: null, activePump: null, pendingPump: null, activeSleep: null,
+  baby: null, settings: { theme: 'auto' },
+  menu: null, recovery: null, recoveryLog: {}
+});
 let state = load();
 
 function load() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
-    if (s) return Object.assign({}, EMPTY, s);
+    if (s) return Object.assign(DEFAULTS(), s);
   } catch (e) {}
-  return JSON.parse(JSON.stringify(EMPTY));
+  return DEFAULTS();
 }
 function save() {
   const cutoff = Date.now() - 30 * 864e5; // храним последние 30 дней
   state.feeds = state.feeds.filter(f => f.end > cutoff);
   state.pumps = state.pumps.filter(p => p.end > cutoff);
+  state.sleeps = state.sleeps.filter(s => s.end > cutoff);
+  state.diapers = state.diapers.filter(d => d.t > cutoff);
+  state.water = state.water.filter(w => w.t > cutoff);
   try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
 }
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
+// ---------- Тема ----------
+function applyTheme() {
+  const pref = state.settings.theme;
+  let dark;
+  if (pref === 'dark') dark = true;
+  else if (pref === 'light') dark = false;
+  else if (inTelegram) dark = tg.colorScheme === 'dark';
+  else dark = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.classList.toggle('dark', dark);
+  const bg = dark ? '#1C1615' : '#FFF7F3';
+  if (inTelegram) { try { tg.setHeaderColor(bg); tg.setBackgroundColor(bg); } catch (e) {} }
+}
+if (inTelegram) { try { tg.onEvent('themeChanged', applyTheme); } catch (e) {} }
+if (window.matchMedia) { try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch (e) {} }
+
 // ---------- Форматирование ----------
 const SIDE = { left: 'Левая', right: 'Правая', both: 'Обе' };
 const SIDE_FROM = { left: 'левой', right: 'правой' };
+const WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const $ = s => document.querySelector(s);
 const pad = n => String(n).padStart(2, '0');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function plural(n, one, few, many) {
+  const a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return many;
+  if (b === 1) return one;
+  if (b >= 2 && b <= 4) return few;
+  return many;
+}
 function fmtTimer(ms) {
   const s = Math.max(0, Math.floor(ms / 1000));
   const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
@@ -194,6 +505,7 @@ function fmtDur(ms) {
   if (m < 60) return m + ' мин';
   return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин';
 }
+const fmtDur0 = ms => fmtDur(ms).replace('меньше минуты', '0 мин');
 function fmtTime(t) { const d = new Date(t); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
 function ago(t) {
   const m = Math.floor((Date.now() - t) / 60000);
@@ -201,16 +513,135 @@ function ago(t) {
   if (m < 60) return m + ' мин назад';
   return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин назад';
 }
-const isToday = t => new Date(t).toDateString() === new Date().toDateString();
+const dayKey = t => { const d = new Date(t); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const todayKey = () => dayKey(Date.now());
+const isToday = t => dayKey(t) === todayKey();
+function last7() {
+  const out = [], now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    out.push({ key: dayKey(d), label: WD[d.getDay()], date: `${pad(d.getDate())}.${pad(d.getMonth() + 1)}` });
+  }
+  return out;
+}
+
+// ---------- Профиль малыша ----------
+function babyDays() {
+  if (!state.baby || !state.baby.birth) return null;
+  const b = new Date(state.baby.birth + 'T00:00:00');
+  const today = new Date(new Date().toDateString());
+  const d = Math.round((today - b) / 864e5);
+  return d >= 0 ? d : null;
+}
+function ageText() {
+  const days = babyDays();
+  if (days === null) return '';
+  if (days === 0) return 'Сегодня день рождения! 💕';
+  if (days < 14) return `${days} ${plural(days, 'день', 'дня', 'дней')}`;
+  if (days < 56) {
+    const w = Math.floor(days / 7), d = days % 7;
+    return `${w} ${plural(w, 'неделя', 'недели', 'недель')}` + (d ? ` ${d} ${plural(d, 'день', 'дня', 'дней')}` : '');
+  }
+  const b = new Date(state.baby.birth + 'T00:00:00'), now = new Date();
+  let m = (now.getFullYear() - b.getFullYear()) * 12 + now.getMonth() - b.getMonth();
+  if (now.getDate() < b.getDate()) m--;
+  if (m < 12) return `${m} ${plural(m, 'месяц', 'месяца', 'месяцев')}`;
+  const y = Math.floor(m / 12), mm = m % 12;
+  return `${y} ${plural(y, 'год', 'года', 'лет')}` + (mm ? ` ${mm} мес.` : '');
+}
+function ageTip() {
+  const d = babyDays();
+  if (d === null) return '';
+  if (d < 7) return '🍼 Первые дни: малыш ест часто и понемногу — 8–12 раз в сутки и чаще это норма. Небольшая потеря веса в первые дни бывает почти у всех; к 10–14 дню вес обычно восстанавливается.';
+  if (d < 42) return '📈 В этом возрасте бывают «скачки роста» (часто около 2–3 и 6 недель): малыш просит грудь чаще обычного. Это нормально — выработка молока подстроится за пару дней.';
+  if (d < 90) return '⚡ Кормления могут становиться короче — малыш сосёт всё эффективнее. Грудь может стать мягче, но это не значит, что молока стало меньше.';
+  if (d < 180) return '👀 Малыш становится любопытным и может отвлекаться во время кормления. Помогает спокойное место с приглушённым светом.';
+  return '🥄 ВОЗ рекомендует вводить прикорм примерно с 6 месяцев, продолжая грудное вскармливание. План прикорма лучше обсудить с педиатром.';
+}
+function renderBaby() {
+  const card = $('#babyCard');
+  if (state.baby && state.baby.name) {
+    const age = ageText(), tip = ageTip();
+    card.innerHTML = `
+      <div class="baby">
+        <div class="ava">👶</div>
+        <div><div class="name">${esc(state.baby.name)}</div>${age ? `<div class="age">${age}</div>` : ''}</div>
+      </div>
+      ${tip ? `<div class="age-tip">${tip}</div>` : ''}`;
+  } else {
+    card.innerHTML = `
+      <div class="baby">
+        <div class="ava">👶</div>
+        <div><div class="name" style="font-size:17px">Добавьте профиль малыша</div>
+        <div class="is">Приложение будет показывать возраст и советы по нему</div></div>
+      </div>
+      <button class="btn btn-pink" style="margin-top:12px" id="addBaby">Добавить</button>`;
+    $('#addBaby').onclick = openSettings;
+  }
+}
+
+// ---------- Подгузники ----------
+function addDiaper(type) {
+  haptic('medium');
+  state.diapers.push({ id: newId(), type, t: Date.now() });
+  save(); renderDiapers(); renderSummary();
+}
+function renderDiapers() {
+  const today = state.diapers.filter(d => isToday(d.t));
+  const wet = today.filter(d => d.type !== 'dirty').length;
+  const dirty = today.filter(d => d.type !== 'wet').length;
+  $('#wetCount').textContent = wet;
+  $('#dirtyCount').textContent = dirty;
+  $('#diaperTotal').textContent = today.length ? `всего ${today.length}` : '';
+  const days = babyDays();
+  const showNorm = days === null || days >= 5;
+  $('#wetNorm').classList.toggle('hidden', !showNorm);
+  if (showNorm) {
+    $('#wetBar').style.width = Math.min(100, wet / 6 * 100) + '%';
+    $('#wetNote').textContent = wet >= 6
+      ? '👍 6 и больше мокрых подгузников в сутки — хороший признак, что малышу хватает молока.'
+      : 'После 5-го дня жизни 6 и больше мокрых подгузников в сутки — признак, что молока хватает. Если их стабильно меньше, обсудите с педиатром.';
+  }
+  const names = { wet: '💧 Мокрый', dirty: '💩 Грязный', both: '✨ Мокрый и грязный' };
+  $('#diaperList').innerHTML = today.length
+    ? today.slice().sort((a, b) => b.t - a.t).map(d => `
+      <div class="item"><div class="it">${fmtTime(d.t)} · ${names[d.type]}</div>
+      <button class="del" data-kind="diaper" data-id="${d.id}" aria-label="Удалить">×</button></div>`).join('')
+    : '<div class="empty">Пока ничего нет</div>';
+}
+
+// ---------- Вода ----------
+const GLASS_ML = 250;
+function renderWater() {
+  const n = state.water.filter(w => isToday(w.t)).length;
+  $('#waterCount').textContent = n;
+  $('#waterMl').textContent = `${plural(n, 'стакан', 'стакана', 'стаканов')} · ${n * GLASS_ML} мл`;
+  $('#glasses').textContent = '🥛'.repeat(Math.min(n, 16)) + (n > 16 ? ' +' + (n - 16) : '');
+  $('#waterMinus').disabled = n === 0;
+  $('#waterMinus').style.opacity = n === 0 ? .4 : 1;
+}
+
+// ---------- Кратко ----------
+function sleepMsToday() {
+  const now = Date.now();
+  let ms = state.sleeps.filter(s => isToday(s.start)).reduce((a, s) => a + s.end - s.start, 0);
+  if (state.activeSleep && isToday(state.activeSleep.start)) ms += now - state.activeSleep.start;
+  return ms;
+}
+function renderSummary() {
+  const feeds = state.feeds.filter(f => isToday(f.start));
+  $('#sumFeed').textContent = countFeedings(feeds);
+  const last = lastFeed();
+  $('#sumLast').textContent = state.activeFeed ? 'идёт сейчас' : (last ? ago(last.end) : '—');
+  $('#sumPump').textContent = state.pumps.filter(p => isToday(p.start)).reduce((s, p) => s + (p.ml || 0), 0) + ' мл';
+  $('#sumSleep').textContent = state.activeSleep ? fmtDur0(sleepMsToday()) + ' · спит' : fmtDur0(sleepMsToday());
+  const ex = exProgress();
+  $('#sumEx').textContent = ex.total ? `${ex.done} из ${ex.total}` : '—';
+}
 
 // ---------- Кормление ----------
-function lastFeed() {
-  return state.feeds.reduce((a, b) => (!a || b.end > a.end ? b : a), null);
-}
-function suggestedSide() {
-  const l = lastFeed();
-  return l ? (l.side === 'left' ? 'right' : 'left') : null;
-}
+function lastFeed() { return state.feeds.reduce((a, b) => (!a || b.end > a.end ? b : a), null); }
+function suggestedSide() { const l = lastFeed(); return l ? (l.side === 'left' ? 'right' : 'left') : null; }
 function finishFeed() {
   const a = state.activeFeed;
   if (!a) return;
@@ -236,7 +667,6 @@ function countFeedings(list) {
   sorted.forEach(f => { if (f.start - prevEnd > 15 * 60000) count++; prevEnd = f.end; });
   return count;
 }
-
 function renderHint() {
   const a = state.activeFeed, last = lastFeed();
   let h;
@@ -245,7 +675,6 @@ function renderHint() {
   else h = '🌸 Здесь появится подсказка, с какой груди начать следующее кормление.';
   $('#feedHint').innerHTML = h;
 }
-
 function renderFeed() {
   const a = state.activeFeed, sug = suggestedSide();
   document.querySelectorAll('#s-feed .btn-side').forEach(b => {
@@ -253,13 +682,11 @@ function renderFeed() {
     b.classList.toggle('suggest', !a && b.dataset.side === sug);
   });
   $('#feedStop').classList.toggle('hidden', !a);
-  $('#feedStatus').textContent = a
-    ? `${SIDE[a.side]} грудь · начали в ${fmtTime(a.start)}`
-    : 'Нажмите на грудь, с которой начинаете';
+  $('#feedStatus').textContent = a ? `${SIDE[a.side]} грудь · начали в ${fmtTime(a.start)}` : 'Нажмите на грудь, с которой начинаете';
   renderHint();
   const today = state.feeds.filter(f => isToday(f.start));
   $('#feedCount').textContent = countFeedings(today);
-  $('#feedTotal').textContent = fmtDur(today.reduce((s, f) => s + f.end - f.start, 0)).replace('меньше минуты', '0 мин');
+  $('#feedTotal').textContent = fmtDur0(today.reduce((s, f) => s + f.end - f.start, 0));
   $('#feedList').innerHTML = listHtml(today, 'feed');
 }
 
@@ -305,6 +732,45 @@ function renderPump() {
   $('#pumpList').innerHTML = listHtml(today, 'pump');
 }
 
+// ---------- Сон ----------
+function lastSleep() { return state.sleeps.reduce((a, b) => (!a || b.end > a.end ? b : a), null); }
+function toggleSleep() {
+  if (state.activeSleep) {
+    haptic('heavy');
+    const end = Date.now();
+    if (end - state.activeSleep.start > 30000) state.sleeps.push({ id: newId(), start: state.activeSleep.start, end });
+    state.activeSleep = null;
+  } else {
+    haptic('medium');
+    state.activeSleep = { start: Date.now() };
+  }
+  save(); render();
+}
+function renderSleepHint() {
+  const a = state.activeSleep, last = lastSleep();
+  let h;
+  if (a) h = `🌙 Малыш спит с <b>${fmtTime(a.start)}</b>. Отдохните и вы, если получится 💜`;
+  else if (last) h = `☀️ Малыш бодрствует уже <b>${fmtDur0(Date.now() - last.end)}</b> (проснулся в ${fmtTime(last.end)}).`;
+  else h = '😴 Нажмите кнопку, когда малыш уснёт, — приложение посчитает, сколько он спит за день.';
+  $('#sleepHint').innerHTML = h;
+}
+function renderSleep() {
+  const a = state.activeSleep;
+  const btn = $('#sleepBtn');
+  btn.textContent = a ? '☀️ Малыш проснулся' : '😴 Малыш уснул';
+  btn.classList.toggle('stop', !!a);
+  $('#sleepStatus').textContent = a ? `Спит с ${fmtTime(a.start)}` : 'Нажмите, когда малыш уснёт';
+  renderSleepHint();
+  const today = state.sleeps.filter(s => isToday(s.start));
+  $('#sleepCount').textContent = today.length + (a ? 1 : 0);
+  $('#sleepTotal').textContent = fmtDur0(sleepMsToday());
+  $('#sleepList').innerHTML = today.length
+    ? today.slice().sort((x, y) => y.start - x.start).map(s => `
+      <div class="item"><div><div class="it">${fmtTime(s.start)} – ${fmtTime(s.end)}</div><div class="is">${fmtDur(s.end - s.start)}</div></div>
+      <button class="del" data-kind="sleep" data-id="${s.id}" aria-label="Удалить">×</button></div>`).join('')
+    : '<div class="empty">Пока ничего нет</div>';
+}
+
 // ---------- Списки ----------
 function listHtml(items, kind) {
   if (!items.length) return '<div class="empty">Пока ничего нет</div>';
@@ -316,6 +782,169 @@ function listHtml(items, kind) {
       </div>
       <button class="del" data-kind="${kind}" data-id="${i.id}" aria-label="Удалить">×</button>
     </div>`).join('');
+}
+
+// ---------- Статистика ----------
+function dayData(key) {
+  const feeds = state.feeds.filter(f => dayKey(f.start) === key);
+  const diapers = state.diapers.filter(d => dayKey(d.t) === key);
+  return {
+    feeds: countFeedings(feeds),
+    sleep: state.sleeps.filter(s => dayKey(s.start) === key).reduce((a, s) => a + s.end - s.start, 0),
+    wet: diapers.filter(d => d.type !== 'dirty').length,
+    dirty: diapers.filter(d => d.type !== 'wet').length,
+    pump: state.pumps.filter(p => dayKey(p.start) === key).reduce((a, p) => a + (p.ml || 0), 0),
+    water: state.water.filter(w => dayKey(w.t) === key).length,
+    any: feeds.length + diapers.length > 0 || state.sleeps.some(s => dayKey(s.start) === key) || state.pumps.some(p => dayKey(p.start) === key)
+  };
+}
+const METRICS = [
+  { id: 'feeds', name: '🍼 Кормления', title: 'Кормлений в день', color: 'var(--primary)', fmt: v => Math.round(v * 10) / 10 },
+  { id: 'sleep', name: '😴 Сон', title: 'Сон малыша (часов в день)', color: 'var(--violet)', val: v => v / 3600000, fmt: v => (Math.round(v * 10) / 10) + ' ч' },
+  { id: 'wet', name: '💧 Подгузники', title: 'Мокрых подгузников в день', color: 'var(--blue)', fmt: v => Math.round(v * 10) / 10 },
+  { id: 'pump', name: '🧴 Сцеживание', title: 'Сцежено за день (мл)', color: 'var(--sage)', fmt: v => Math.round(v) + ' мл' },
+  { id: 'water', name: '🥛 Вода', title: 'Стаканов воды в день', color: 'var(--blue)', fmt: v => Math.round(v * 10) / 10 }
+];
+let statMetric = 'feeds';
+function renderStats() {
+  $('#statCats').innerHTML = METRICS.map(m => `<button class="chip ${m.id === statMetric ? 'on' : ''}" data-metric="${m.id}">${m.name}</button>`).join('');
+  const m = METRICS.find(x => x.id === statMetric);
+  const days = last7().map(d => {
+    const data = dayData(d.key);
+    return Object.assign(d, { v: m.val ? m.val(data[m.id]) : data[m.id], any: data.any });
+  });
+  const max = Math.max(...days.map(d => d.v), 0.0001);
+  const tk = todayKey();
+  $('#statTitle').textContent = m.title;
+  $('#bars').innerHTML = days.map(d => `
+    <div class="bar ${d.key === tk ? 'today' : ''}">
+      <div class="v">${d.v ? m.fmt(d.v) : ''}</div>
+      <div class="col" style="height:${d.v ? Math.max(4, d.v / max * 120) : 4}px;background:${m.color}"></div>
+      <div class="lbl">${d.label}</div>
+    </div>`).join('');
+  const full = days.filter(d => d.key !== tk && d.any);
+  $('#statAvg').textContent = full.length ? m.fmt(full.reduce((a, d) => a + d.v, 0) / full.length) : 'мало данных';
+}
+
+// ---------- Меню ----------
+const MEALS = [
+  { id: 'b', name: 'Завтрак', e: '🍳', list: [
+    'Овсянка на молоке с бананом и горстью орехов',
+    'Омлет с помидорами и шпинатом, цельнозерновой хлеб',
+    'Творог со сметаной, ягодами и ложкой мёда',
+    'Гречневая каша с молоком и тёртым яблоком',
+    'Сырники, запечённые в духовке, с йогуртом',
+    'Тост из цельнозернового хлеба с авокадо и яйцом',
+    'Пшённая каша с тыквой' ] },
+  { id: 'l', name: 'Обед', e: '🍲', list: [
+    'Куриный суп с овощами и лапшой, салат из огурцов',
+    'Гречка с тушёной говядиной и овощами',
+    'Запечённая треска с картофелем и брокколи',
+    'Индейка с бурым рисом и овощным салатом',
+    'Борщ со сметаной и кусочком ржаного хлеба',
+    'Суп из красной чечевицы, цельнозерновой хлеб',
+    'Тефтели из говядины с макаронами и салатом' ] },
+  { id: 'd', name: 'Ужин', e: '🍽', list: [
+    'Запечённый лосось с овощами',
+    'Котлеты из индейки с картофельным пюре',
+    'Овощное рагу с курицей',
+    'Паста с томатным соусом, сыром и салатом',
+    'Плов с курицей и морковью',
+    'Фриттата со шпинатом и сыром, свежие овощи',
+    'Минтай на пару с рисом и тушёной морковью' ] },
+  { id: 's', name: 'Перекусы', e: '🍎', list: [
+    'Натуральный йогурт с фруктами',
+    'Горсть орехов и сухофруктов',
+    'Яблоко или груша и кусочек сыра',
+    'Стакан кефира или ряженки и банан',
+    'Хлебцы с творожным сыром и огурцом',
+    'Творожок и ягоды',
+    'Морковные палочки с хумусом' ] }
+];
+function hash(str) { let h = 0; for (const c of str) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); }
+function menuState() {
+  if (!state.menu || state.menu.date !== todayKey()) state.menu = { date: todayKey(), shift: { b: 0, l: 0, d: 0, s: 0 } };
+  return state.menu;
+}
+function mealPick(meal) {
+  const ms = menuState();
+  return meal.list[(hash(ms.date + meal.id) + ms.shift[meal.id]) % meal.list.length];
+}
+function renderMenu() {
+  $('#menuList').innerHTML = MEALS.map(m => `
+    <div class="card meal">
+      <div class="e">${m.e}</div>
+      <div class="grow"><div class="t">${m.name}</div><div class="n">${mealPick(m)}</div></div>
+      <button class="shuffle" data-meal="${m.id}" aria-label="Другой вариант">🔄</button>
+    </div>`).join('');
+}
+
+// ---------- Восстановление ----------
+const STAGES = [
+  { id: 's1', from: 0, to: 14, title: 'Недели 1–2: мягкий старт', ex: [
+    { id: 'breath', n: 'Дыхание животом', h: 'Лёжа на спине, колени согнуты. Вдох носом — живот поднимается, выдох — мягко подтяните живот к позвоночнику.', r: '5 минут' },
+    { id: 'kegel1', n: 'Мышцы тазового дна', h: 'Напрягите мышцы, будто сдерживаете мочеиспускание, удержите 3–5 секунд и полностью расслабьтесь.', r: '10 повторов, 3 раза в день' },
+    { id: 'walk1', n: 'Короткая прогулка', h: 'Спокойная ходьба в своём темпе. Можно с коляской.', r: '5–15 минут' },
+    { id: 'posture', n: 'Осанка при кормлении', h: 'Подушка под руку и спину, плечи опущены, малыша подносим к груди, а не наклоняемся сами.', r: 'При каждом кормлении' } ] },
+  { id: 's2', from: 14, to: 42, title: 'Недели 3–6: набираем силу', ex: [
+    { id: 'kegel2', n: 'Тазовое дно — длинные удержания', h: 'То же упражнение, но удержание до 10 секунд. Добавьте 10 быстрых сокращений.', r: '10 повторов, 3 раза в день' },
+    { id: 'bridge', n: 'Ягодичный мостик', h: 'Лёжа на спине, колени согнуты. На выдохе подтяните живот и мягко поднимите таз, на вдохе опустите.', r: '8–10 повторов' },
+    { id: 'walk2', n: 'Прогулка', h: 'Постепенно увеличивайте время и темп, ориентируясь на самочувствие.', r: '15–30 минут' },
+    { id: 'stretch', n: 'Шея и плечи', h: 'Медленные наклоны головы и круги плечами — снимают напряжение после кормлений и укачиваний.', r: '2–3 минуты' } ] },
+  { id: 's3', from: 42, to: 84, title: 'После 6–8 недель — с разрешения врача', ex: [
+    { id: 'deadbug', n: 'Мягкая работа с корпусом', h: 'Лёжа на спине, руки вверх, колени согнуты. На выдохе по очереди медленно опускайте пятку к полу, удерживая живот подтянутым.', r: '8 повторов на каждую ногу' },
+    { id: 'squat', n: 'Приседания к стулу', h: 'Медленно опуститесь к стулу и встаньте, не задерживая дыхание. Колени смотрят в сторону носков.', r: '10 повторов' },
+    { id: 'walk3', n: 'Активная ходьба', h: 'Быстрым шагом, чтобы слегка ускорилось дыхание, но можно было разговаривать.', r: '30 минут' },
+    { id: 'kegel3', n: 'Тазовое дно', h: 'Продолжайте каждый день — это основа для возвращения к спорту.', r: '10 повторов, 3 раза в день' } ] },
+  { id: 's4', from: 84, to: 99999, title: 'От 12 недель: возвращение к спорту', ex: [
+    { id: 'strength', n: 'Силовая тренировка с весом тела', h: 'Приседания, выпады, отжимания от стены или с колен. Увеличивайте нагрузку постепенно.', r: '2–3 раза в неделю' },
+    { id: 'cardio', n: 'Кардио', h: 'Бег, прыжки и интенсивные занятия — когда нет боли, подтекания мочи и тяжести внизу живота. Если есть — сначала к врачу или специалисту по тазовому дну.', r: '20–30 минут' },
+    { id: 'kegel4', n: 'Тазовое дно', h: 'Не бросайте — особенно если возвращаетесь к бегу и прыжкам.', r: 'Ежедневно' } ] }
+];
+function currentStage() {
+  const d = babyDays();
+  return d === null ? null : STAGES.find(s => d >= s.from && d < s.to);
+}
+function recState() {
+  if (!state.recovery || state.recovery.date !== todayKey()) state.recovery = { date: todayKey(), done: [] };
+  return state.recovery;
+}
+function exProgress() {
+  const st = currentStage() || STAGES[0];
+  const rs = state.recovery && state.recovery.date === todayKey() ? state.recovery.done : [];
+  return { done: st.ex.filter(e => rs.includes(e.id)).length, total: st.ex.length };
+}
+function toggleEx(id) {
+  const rs = recState();
+  const i = rs.done.indexOf(id);
+  if (i >= 0) rs.done.splice(i, 1); else { rs.done.push(id); haptic('medium'); }
+  state.recoveryLog[todayKey()] = rs.done.length;
+  save(); renderRecovery(); renderSummary();
+}
+function renderRecovery() {
+  const cur = currentStage();
+  const rs = recState().done;
+  const p = exProgress();
+  $('#exToday').textContent = `${p.done} из ${p.total}`;
+  $('#exBar').style.width = (p.done / p.total * 100) + '%';
+  const week = last7().filter(d => (state.recoveryLog[d.key] || 0) > 0).length;
+  $('#exWeek').textContent = cur
+    ? `Дней с упражнениями за неделю: ${week} из 7`
+    : 'Укажите дату рождения малыша в ⚙️ — приложение подберёт упражнения под ваш срок после родов.';
+  $('#stages').innerHTML = STAGES.map(s => {
+    const isCur = cur ? cur.id === s.id : s.id === 's1';
+    return `
+    <details class="card tip stage ${isCur ? 'current' : ''}" ${isCur ? 'open' : ''}>
+      <summary><span>${isCur && cur ? '<span class="badge">Сейчас</span><br>' : ''}${s.title}</span></summary>
+      <div style="margin-top:6px">
+        ${s.ex.map(e => `
+          <div class="ex">
+            <button class="check ${rs.includes(e.id) ? 'on' : ''}" data-ex="${e.id}" aria-label="Отметить">${rs.includes(e.id) ? '✓' : ''}</button>
+            <div><div class="n">${e.n}</div><div class="h">${e.h}</div><div class="r">${e.r}</div></div>
+          </div>`).join('')}
+      </div>
+    </details>`;
+  }).join('');
 }
 
 // ---------- Советы ----------
@@ -331,6 +960,10 @@ const TIPS = [
   { cat: 'Сцеживание', title: 'Как сцеживаться легче', text: 'Помогают тепло на грудь, лёгкий массаж, удобная расслабленная поза и фото или вещь малыша рядом. Мойте руки перед сцеживанием, а детали молокоотсоса — после каждого использования.' },
   { cat: 'Сцеживание', title: 'Сколько сцеживать — «норма»?', text: 'Объём сцеживания сильно отличается у разных женщин и не показывает, сколько молока малыш получает напрямую из груди. Малыш высасывает молоко эффективнее любого молокоотсоса. Маленький объём — не повод для паники.' },
 
+  { cat: 'Сон', title: 'Безопасный сон', text: 'Укладывайте малыша на спину, на ровный твёрдый матрас в своей кроватке. В кроватке не должно быть подушек, одеял, бортиков и мягких игрушек. Не перегревайте малыша и не курите рядом с ним.' },
+  { cat: 'Сон', title: 'Сколько спят малыши', text: 'Новорождённые спят много — обычно 14–17 часов в сутки, но короткими отрезками, днём и ночью. Режим постепенно складывается к 3–4 месяцам, у каждого малыша по-своему.' },
+  { cat: 'Сон', title: 'Как помочь отличать день и ночь', text: 'Днём — светло, обычные звуки и общение. Ночью — приглушённый свет, тишина и спокойные кормления без игр. Так малыш постепенно привыкает, что ночь для сна.' },
+
   { cat: 'Питание', title: 'Особая диета не нужна', text: 'Кормящей маме подходит обычное разнообразное питание: овощи, фрукты, крупы, белок (мясо, рыба, яйца, бобовые), молочные продукты. Исключать продукты «на всякий случай» не нужно — только если у малыша есть явная реакция и это подтвердил врач.' },
   { cat: 'Питание', title: 'Пейте по жажде', text: 'Держите бутылку воды рядом во время каждого кормления — жажда при ГВ возникает часто. Но пить «через силу» не нужно: на количество молока это не влияет.' },
   { cat: 'Питание', title: 'Рыба и омега-3', text: 'Рыба 2–3 раза в неделю — полезно для мамы и малыша. Выбирайте виды с низким содержанием ртути: лосось, сардина, треска, минтай. Крупную хищную рыбу (меч-рыба, акула, королевская макрель) лучше избегать.' },
@@ -339,9 +972,7 @@ const TIPS = [
 
   { cat: 'Восстановление', title: 'Мышцы тазового дна', text: 'Упражнения Кегеля обычно можно начинать вскоре после родов без осложнений, если нет боли. Напрягите мышцы так, будто сдерживаете мочеиспускание, на 3–5 секунд, затем расслабьтесь. 10 повторов 3 раза в день — их удобно делать прямо во время кормления.' },
   { cat: 'Восстановление', title: 'Дыхание и мышцы живота', text: 'Начните с дыхания животом лёжа: на вдохе живот поднимается, на выдохе мягко подтягивайте его к позвоночнику. Скручивания и планку отложите, пока врач не проверит, нет ли расхождения мышц живота (диастаза).' },
-  { cat: 'Восстановление', title: 'Прогулки', text: 'Ходьба — лучший старт: начните с 10–15 минут и постепенно увеличивайте время. Прогулка с коляской тоже считается!' },
   { cat: 'Восстановление', title: 'Когда можно спорт', text: 'К активным тренировкам обычно возвращаются после осмотра у врача, примерно через 6–8 недель после родов. После кесарева сечения сроки могут быть дольше — ориентируйтесь на рекомендации своего врача.' },
-  { cat: 'Восстановление', title: 'Береги спину при кормлении', text: 'Подкладывайте подушки под руку и спину и подносите малыша к груди, а не наклоняйтесь к нему. Так шея и спина будут меньше уставать.' },
 
   { cat: 'К врачу', title: 'Когда нужен врач', text: 'Обратитесь к врачу, если: температура выше 38 °C; в груди болезненное красное уплотнение, которое не проходит за сутки; сильное кровотечение; у малыша мало мокрых подгузников, он вялый или сильно желтеет.' },
   { cat: 'К врачу', title: 'Настроение после родов', text: 'Плаксивость и перепады настроения в первые 2 недели после родов бывают у многих. Если подавленность, тревога или безразличие длятся дольше или мешают жить — поговорите с врачом. Это лечится, и просить о помощи — нормально.' },
@@ -355,16 +986,116 @@ function renderTips() {
     `<details class="card tip"><summary>${t.title}</summary><p>${t.text}</p></details>`).join('');
 }
 
+// ---------- Отчёт ----------
+function buildReport() {
+  const days = last7().map(d => Object.assign(d, dayData(d.key)));
+  const withData = days.filter(d => d.any);
+  const avg = f => withData.length ? withData.reduce((a, d) => a + f(d), 0) / withData.length : 0;
+  const r1 = v => Math.round(v * 10) / 10;
+  const lines = [];
+  lines.push(`📄 Отчёт за 7 дней (${days[0].date}–${days[6].date})`);
+  if (state.baby && state.baby.name) lines.push(`Малыш: ${state.baby.name}${ageText() ? ', ' + ageText() : ''}`);
+  lines.push('');
+  if (!withData.length) {
+    lines.push('Пока нет записей. Отмечайте кормления, сон и подгузники — и здесь появится сводка.');
+    return lines.join('\n');
+  }
+  lines.push('В среднем за день (по дням с записями):');
+  lines.push(`🍼 Кормлений: ${r1(avg(d => d.feeds))}`);
+  lines.push(`😴 Сон: ${fmtDur0(avg(d => d.sleep))}`);
+  lines.push(`💧 Мокрых подгузников: ${r1(avg(d => d.wet))}`);
+  lines.push(`💩 Грязных подгузников: ${r1(avg(d => d.dirty))}`);
+  const pumpAvg = avg(d => d.pump);
+  if (pumpAvg) lines.push(`🧴 Сцежено: ${Math.round(pumpAvg)} мл`);
+  lines.push('');
+  lines.push('По дням:');
+  days.forEach(d => {
+    if (!d.any) { lines.push(`${d.label} ${d.date}: нет записей`); return; }
+    lines.push(`${d.label} ${d.date}: 🍼 ${d.feeds} · 😴 ${fmtDur0(d.sleep)} · 💧 ${d.wet} · 💩 ${d.dirty}${d.pump ? ` · 🧴 ${d.pump} мл` : ''}`);
+  });
+  lines.push('');
+  lines.push('Сегодняшний день может быть неполным.');
+  lines.push('Подготовлено в приложении «Мама рядом»');
+  return lines.join('\n');
+}
+function renderReport() { $('#reportText').textContent = buildReport(); }
+function copyText(text) {
+  const done = () => { toast('Скопировано ✓'); haptic('light'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch (e) { toast('Не получилось скопировать'); }
+  ta.remove();
+}
+function shareReport() {
+  const text = buildReport();
+  const link = 'https://t.me/share/url?url=' + encodeURIComponent(text);
+  if (inTelegram) { try { tg.openTelegramLink(link); return; } catch (e) {} }
+  if (navigator.share) { navigator.share({ text }).catch(() => {}); return; }
+  window.open(link, '_blank');
+}
+
+// ---------- Настройки ----------
+let draftTheme = 'auto';
+function openSettings() {
+  $('#babyName').value = (state.baby && state.baby.name) || '';
+  $('#babyBirth').value = (state.baby && state.baby.birth) || '';
+  $('#babyBirth').max = todayKey();
+  draftTheme = state.settings.theme;
+  renderThemeSeg();
+  $('#settings').classList.remove('hidden');
+  haptic('light');
+}
+function closeSettings() { $('#settings').classList.add('hidden'); }
+function renderThemeSeg() {
+  document.querySelectorAll('#themeSeg button').forEach(b => b.classList.toggle('on', b.dataset.theme === draftTheme));
+}
+function saveSettings() {
+  const name = $('#babyName').value.trim();
+  const birth = $('#babyBirth').value;
+  state.baby = name || birth ? { name: name || 'Малыш', birth } : null;
+  state.settings.theme = draftTheme;
+  save(); applyTheme(); render(); renderRecovery(); closeSettings();
+  haptic('medium');
+}
+
 // ---------- Вкладки ----------
+const MAIN_TABS = ['home', 'feed', 'pump', 'sleep', 'more'];
+let currentTab = 'home';
 function showTab(tab) {
-  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  currentTab = tab;
+  const navTab = MAIN_TABS.includes(tab) ? tab : 'more';
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === navTab));
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === 's-' + tab));
+  if (tab === 'stats') renderStats();
+  if (tab === 'menu') renderMenu();
+  if (tab === 'recovery') renderRecovery();
+  if (tab === 'report') renderReport();
+  if (inTelegram) {
+    try { MAIN_TABS.includes(tab) ? tg.BackButton.hide() : tg.BackButton.show(); } catch (e) {}
+  }
   window.scrollTo(0, 0);
   haptic('light');
 }
+if (inTelegram) { try { tg.BackButton.onClick(() => showTab('more')); } catch (e) {} }
 
 // ---------- События ----------
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+document.querySelectorAll('.summary .row, .tile').forEach(r => r.onclick = () => showTab(r.dataset.go));
+document.querySelectorAll('[data-back]').forEach(b => b.onclick = () => showTab('more'));
+document.querySelectorAll('[data-diaper]').forEach(b => b.onclick = () => addDiaper(b.dataset.diaper));
+$('#waterPlus').onclick = () => { haptic('light'); state.water.push({ t: Date.now() }); save(); renderWater(); };
+$('#waterMinus').onclick = () => {
+  for (let i = state.water.length - 1; i >= 0; i--) {
+    if (isToday(state.water[i].t)) { state.water.splice(i, 1); break; }
+  }
+  haptic('light'); save(); renderWater();
+};
 document.querySelectorAll('#s-feed .btn-side').forEach(b => b.onclick = () => startFeed(b.dataset.side));
 $('#feedStop').onclick = stopFeed;
 document.querySelectorAll('#pumpSides .chip').forEach(c => c.onclick = () => { pumpSide = c.dataset.side; haptic('light'); renderPump(); });
@@ -376,36 +1107,59 @@ document.querySelectorAll('.quick button').forEach(b => b.onclick = () => {
   inp.value = (parseInt(inp.value, 10) || 0) + Number(b.dataset.add);
   haptic('light');
 });
+$('#sleepBtn').onclick = toggleSleep;
+$('#statCats').onclick = e => { const c = e.target.closest('[data-metric]'); if (c) { statMetric = c.dataset.metric; haptic('light'); renderStats(); } };
+$('#menuList').onclick = e => {
+  const b = e.target.closest('[data-meal]');
+  if (!b) return;
+  menuState().shift[b.dataset.meal]++;
+  haptic('light'); save(); renderMenu();
+};
+$('#menuAll').onclick = () => { const ms = menuState(); Object.keys(ms.shift).forEach(k => ms.shift[k] += 1 + Math.floor(Math.random() * 3)); haptic('medium'); save(); renderMenu(); };
+$('#stages').onclick = e => { const b = e.target.closest('[data-ex]'); if (b) { e.preventDefault(); toggleEx(b.dataset.ex); } };
 $('#tipCats').onclick = e => {
   const c = e.target.closest('.chip');
   if (c) { tipCat = c.dataset.cat; haptic('light'); renderTips(); }
 };
 $('#toStorage').onclick = () => { tipCat = 'Сцеживание'; renderTips(); showTab('tips'); };
+$('#reportCopy').onclick = () => copyText(buildReport());
+$('#reportShare').onclick = shareReport;
+$('#openSettings').onclick = openSettings;
+$('#settingsCancel').onclick = closeSettings;
+$('#settingsSave').onclick = saveSettings;
+$('#settings').onclick = e => { if (e.target.id === 'settings') closeSettings(); };
+document.querySelectorAll('#themeSeg button').forEach(b => b.onclick = () => { draftTheme = b.dataset.theme; renderThemeSeg(); });
 document.addEventListener('click', e => {
   const d = e.target.closest('.del');
   if (!d) return;
   askConfirm('Удалить эту запись?', () => {
-    const list = d.dataset.kind === 'feed' ? 'feeds' : 'pumps';
+    const list = { feed: 'feeds', pump: 'pumps', diaper: 'diapers', sleep: 'sleeps' }[d.dataset.kind];
     state[list] = state[list].filter(i => i.id !== d.dataset.id);
     save(); render();
   });
 });
 
 // ---------- Запуск ----------
-function render() { renderFeed(); renderPump(); }
+function render() { renderBaby(); renderDiapers(); renderWater(); renderSummary(); renderFeed(); renderPump(); renderSleep(); }
+let lastDay = todayKey();
 function tick() {
   const now = Date.now();
+  if (todayKey() !== lastDay) { lastDay = todayKey(); render(); } // наступил новый день
   $('#feedTimer').textContent = state.activeFeed ? fmtTimer(now - state.activeFeed.start) : '00:00';
   $('#pumpTimer').textContent = state.activePump ? fmtTimer(now - state.activePump.start) : '00:00';
+  $('#sleepTimer').textContent = state.activeSleep ? fmtTimer(now - state.activeSleep.start) : '00:00';
   renderHint();
+  renderSleepHint();
+  renderSummary();
+  if (state.activeSleep) $('#sleepTotal').textContent = fmtDur0(sleepMsToday());
 }
 
-const user = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+const user = inTelegram && tg.initDataUnsafe && tg.initDataUnsafe.user;
 if (user && user.first_name) $('#hello').textContent = `Привет, ${user.first_name}! 🌸`;
 const dateStr = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
 $('#todayLabel').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
-render(); renderTips(); tick();
+applyTheme(); render(); renderTips(); tick();
 setInterval(tick, 1000);
 </script>
 </body>
