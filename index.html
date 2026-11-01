@@ -165,6 +165,45 @@
   .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--strong-bg);color:var(--strong-fg);padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
   .toast.show{opacity:1}
 
+  /* ИИ-помощник */
+  .ai-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .ai-left{font-size:13px;color:var(--muted);font-weight:700}
+  .chat{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+  .msg{max-width:88%;padding:12px 14px;border-radius:18px;font-size:15px;line-height:1.5;word-wrap:break-word}
+  .msg.user{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:6px}
+  .msg.bot{align-self:flex-start;background:var(--card);box-shadow:var(--shadow);border-bottom-left-radius:6px}
+  .msg.bot.err{background:var(--amber-soft)}
+  .typing span{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin:0 2px;animation:blink 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+  .ask{display:flex;gap:8px;align-items:flex-end;background:var(--card);border-radius:20px;padding:8px;box-shadow:var(--shadow)}
+  .ask textarea{flex:1;border:none;outline:none;resize:none;font:inherit;font-size:16px;color:var(--text);background:none;padding:8px 6px;max-height:120px}
+  .send{border:none;border-radius:14px;width:44px;height:44px;background:var(--primary);color:#fff;font-size:20px;cursor:pointer;flex:none}
+  .send:disabled{opacity:.4}
+  .sugg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .sugg button{border:none;border-radius:14px;padding:10px 12px;font:inherit;font-size:14px;font-weight:700;background:var(--primary-soft);color:var(--primary);cursor:pointer;text-align:left}
+  .ai-clear{background:none;border:none;font:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer}
+
+  /* Достижения */
+  .ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .ach{background:var(--card);border-radius:18px;padding:14px 8px;text-align:center;box-shadow:var(--shadow)}
+  .ach .e{font-size:34px;display:block;margin-bottom:6px}
+  .ach b{display:block;font-size:13px;font-weight:800;line-height:1.25}
+  .ach span.d{display:block;font-size:11px;color:var(--muted);margin-top:4px;line-height:1.3}
+  .ach.locked .e{filter:grayscale(1);opacity:.35}
+  .ach.locked b{color:var(--muted)}
+  .ach .pr{height:5px;background:var(--line);border-radius:99px;margin-top:8px;overflow:hidden}
+  .ach .pr div{height:100%;background:var(--primary);border-radius:99px}
+  .ach-home{display:flex;align-items:center;gap:12px;cursor:pointer}
+  .ach-home .e{font-size:32px}
+  .ach-home .grow{flex:1}
+  .celebrate{position:fixed;inset:0;z-index:65;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);padding:24px}
+  .celebrate .box{background:var(--bg);border-radius:28px;padding:28px 22px;text-align:center;max-width:340px;width:100%;animation:pop .35s ease}
+  .celebrate .e{font-size:72px;display:block;margin-bottom:10px}
+  .celebrate h2{font-size:22px;font-weight:800;margin-bottom:6px}
+  .celebrate p{color:var(--muted);font-size:15px;line-height:1.45;margin-bottom:18px}
+  @keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+
   /* Приветствие */
   .onb{position:fixed;inset:0;background:var(--bg);z-index:70;display:flex;flex-direction:column;padding:24px 20px calc(24px + env(safe-area-inset-bottom))}
   .onb .slide{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:420px;margin:0 auto}
@@ -195,8 +234,8 @@
   .seg button.on{background:var(--primary);color:#fff}
 
   nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding:6px 0 calc(8px + env(safe-area-inset-bottom));z-index:10}
-  nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
-  nav button{background:none;border:none;font:inherit;color:var(--muted);font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;cursor:pointer}
+  nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr)}
+  nav button{background:none;border:none;font:inherit;color:var(--muted);font-size:10px;letter-spacing:-.2px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;cursor:pointer}
   nav button .ico{font-size:22px;filter:grayscale(1);opacity:.55}
   nav button.active{color:var(--primary)}
   nav button.active .ico{filter:none;opacity:1}
@@ -251,6 +290,13 @@
       </div>
       <div class="glasses" id="glasses"></div>
       <div class="note">Пейте по жажде. Удобно держать воду рядом при каждом кормлении.</div>
+    </div>
+
+    <div class="card ach-home" data-go="achievements" id="achHome">
+      <span class="e">🏆</span>
+      <div class="grow"><b>Достижения</b><div class="is" id="achHomeText"></div>
+        <div class="progress" style="margin-top:6px"><div id="achHomeBar" style="width:0;background:var(--primary)"></div></div></div>
+      <span style="color:var(--muted);font-size:20px">›</span>
     </div>
 
     <div class="card summary">
@@ -311,6 +357,28 @@
     <button class="link" id="toStorage">Как хранить сцеженное молоко →</button>
   </section>
 
+  <!-- ===== ИИ-ПОМОЩНИК ===== -->
+  <section class="screen" id="s-ai">
+    <div class="ai-top">
+      <h2 class="page" style="margin:0">🤖 ИИ-помощник</h2>
+      <button class="ai-clear" id="aiClear">Очистить</button>
+    </div>
+    <div class="card hint violet" style="font-size:13px">Это ИИ, и он может ошибаться. Ответы не заменяют врача. Если малышу или вам плохо — сразу обращайтесь к врачу, в экстренной ситуации звоните 112.</div>
+    <div id="aiOff" class="card hidden">
+      <h3>Скоро здесь будет ИИ 🌙</h3>
+      <p style="font-size:14px;line-height:1.5;color:var(--muted)">Помощник ещё настраивается. Загляните чуть позже!</p>
+    </div>
+    <div id="aiOn">
+      <div class="chat" id="chat"></div>
+      <div class="sugg" id="sugg"></div>
+      <div class="ask">
+        <textarea id="aiInput" rows="1" maxlength="800" placeholder="Задайте вопрос…"></textarea>
+        <button class="send" id="aiSend" aria-label="Отправить">➤</button>
+      </div>
+      <div class="ai-left" id="aiLeft" style="text-align:center;margin-top:8px"></div>
+    </div>
+  </section>
+
   <!-- ===== СОН ===== -->
   <section class="screen" id="s-sleep">
     <div class="card hint violet" id="sleepHint"></div>
@@ -334,6 +402,8 @@
   <section class="screen" id="s-more">
     <h2 class="page">Ещё</h2>
     <div class="tiles">
+      <button class="tile" data-go="achievements"><span class="e">🏆</span><b>Достижения</b><span class="d" id="achTileText">Награды для мамы</span></button>
+      <button class="tile hidden" id="communityTile"><span class="e">👭</span><b>Сообщество мам</b><span class="d">Общение и поддержка</span></button>
       <button class="tile" data-go="stats"><span class="e">📊</span><b>Статистика</b><span class="d">Графики за неделю</span></button>
       <button class="tile" data-go="menu"><span class="e">🥗</span><b>Меню на день</b><span class="d">Что приготовить</span></button>
       <button class="tile" data-go="recovery"><span class="e">💪</span><b>Восстановление</b><span class="d">Упражнения по неделям</span></button>
@@ -341,6 +411,15 @@
       <button class="tile" data-go="report"><span class="e">📄</span><b>Отчёт врачу</b><span class="d">Сводка за 7 дней</span></button>
       <button class="tile" data-go="about"><span class="e">🔒</span><b>О приложении</b><span class="d">Данные и конфиденциальность</span></button>
     </div>
+  </section>
+
+  <!-- ===== ДОСТИЖЕНИЯ ===== -->
+  <section class="screen" id="s-achievements">
+    <button class="back" data-back>← Назад</button>
+    <h2 class="page">🏆 Достижения</h2>
+    <div class="card hint" id="achSummary"></div>
+    <div class="ach-grid" id="achGrid"></div>
+    <p class="disclaimer" style="margin-top:12px">Достижения — просто чтобы было приятно 💕 Здесь нет «правильного» темпа: каждая мама и каждый малыш особенные.</p>
   </section>
 
   <!-- ===== О ПРИЛОЖЕНИИ ===== -->
@@ -434,6 +513,16 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ===== НОВОЕ ДОСТИЖЕНИЕ ===== -->
+<div class="celebrate hidden" id="celebrate">
+  <div class="box">
+    <span class="e" id="celE"></span>
+    <h2 id="celT"></h2>
+    <p id="celD"></p>
+    <button class="btn btn-pink" id="celOk">Ура! 🎉</button>
+  </div>
+</div>
+
 <!-- ===== ПРИВЕТСТВИЕ ===== -->
 <div class="onb hidden" id="onb">
   <div class="slide">
@@ -478,6 +567,7 @@
 <nav><div class="in">
   <button class="active" data-tab="home"><span class="ico">🏠</span>Сегодня</button>
   <button data-tab="feed"><span class="ico">🍼</span>Кормление</button>
+  <button data-tab="ai"><span class="ico">🤖</span>ИИ</button>
   <button data-tab="pump"><span class="ico">🧴</span>Сцеживание</button>
   <button data-tab="sleep"><span class="ico">😴</span>Сон</button>
   <button data-tab="more"><span class="ico">☰</span>Ещё</button>
@@ -506,7 +596,8 @@ const DEFAULTS = () => ({
   feeds: [], pumps: [], diapers: [], water: [], sleeps: [],
   activeFeed: null, activePump: null, pendingPump: null, activeSleep: null,
   baby: null, settings: { theme: 'auto' },
-  menu: null, recovery: null, recoveryLog: {}
+  menu: null, recovery: null, recoveryLog: {},
+  ach: {}, activeDays: {}, reportsSent: 0
 });
 let state = load();
 
@@ -524,6 +615,10 @@ function save() {
   state.sleeps = state.sleeps.filter(s => s.end > cutoff);
   state.diapers = state.diapers.filter(d => d.t > cutoff);
   state.water = state.water.filter(w => w.t > cutoff);
+  const hasToday = [state.feeds, state.pumps, state.sleeps].some(l => l.some(x => isToday(x.start)))
+    || state.diapers.some(d => isToday(d.t));
+  if (hasToday) state.activeDays[todayKey()] = 1;
+  if (typeof checkAchievements === 'function') checkAchievements();
   try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
 }
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -1103,6 +1198,144 @@ function shareReport() {
   window.open(link, '_blank');
 }
 
+// ---------- Достижения ----------
+function streakDays() {
+  let n = 0;
+  const d = new Date();
+  if (!state.activeDays[dayKey(d)]) d.setDate(d.getDate() - 1); // сегодня ещё можно успеть
+  while (state.activeDays[dayKey(d)]) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+const maxWetDay = () => Math.max(0, ...Object.values(state.diapers.reduce((m, x) => {
+  if (x.type !== 'dirty') { const k = dayKey(x.t); m[k] = (m[k] || 0) + 1; } return m; }, {})));
+const exDays = () => Object.values(state.recoveryLog).filter(v => v > 0).length;
+const pumpTotal = () => state.pumps.reduce((a, p) => a + (p.ml || 0), 0);
+const ACH = [
+  { id: 'first_feed', e: '🍼', t: 'Первый шаг', d: 'Записать первое кормление', prog: () => [Math.min(state.feeds.length, 1), 1] },
+  { id: 'feeds10', e: '🔟', t: 'Десяточка', d: '10 кормлений', prog: () => [countFeedings(state.feeds), 10] },
+  { id: 'feeds100', e: '💯', t: 'Сотня', d: '100 кормлений', prog: () => [countFeedings(state.feeds), 100] },
+  { id: 'night', e: '🌙', t: 'Ночная героиня', d: 'Кормление между 0:00 и 5:00', prog: () => [state.feeds.some(f => new Date(f.start).getHours() < 5) ? 1 : 0, 1] },
+  { id: 'wet6', e: '💧', t: 'Всё в порядке', d: '6 мокрых подгузников за день', prog: () => [Math.min(maxWetDay(), 6), 6] },
+  { id: 'longsleep', e: '😴', t: 'Сонное царство', d: 'Малыш спал 3 часа подряд', prog: () => [state.sleeps.some(s => s.end - s.start >= 3 * 3600000) ? 1 : 0, 1] },
+  { id: 'first_pump', e: '🧴', t: 'Запасливая', d: 'Первое сцеживание', prog: () => [Math.min(state.pumps.length, 1), 1] },
+  { id: 'liter', e: '🥛', t: 'Целый литр', d: 'Сцедить 1000 мл', prog: () => [Math.min(pumpTotal(), 1000), 1000] },
+  { id: 'first_ex', e: '🌱', t: 'Забота о себе', d: 'Первое упражнение', prog: () => [Math.min(exDays(), 1), 1] },
+  { id: 'ex7', e: '💪', t: 'Сильная мама', d: '7 дней с упражнениями', prog: () => [exDays(), 7] },
+  { id: 'streak3', e: '✨', t: 'Хорошее начало', d: '3 дня подряд с записями', prog: () => [streakDays(), 3] },
+  { id: 'streak7', e: '🔥', t: 'Неделя вместе', d: '7 дней подряд с записями', prog: () => [streakDays(), 7] },
+  { id: 'streak30', e: '👑', t: 'Месяц с нами', d: '30 дней подряд с записями', prog: () => [streakDays(), 30] },
+  { id: 'report', e: '📄', t: 'На связи с врачом', d: 'Отправить или скопировать отчёт', prog: () => [Math.min(state.reportsSent, 1), 1] },
+  { id: 'baby_week', e: '🎈', t: 'Первая неделя', d: 'Малышу 7 дней', prog: () => [Math.min(babyDays() || 0, 7), 7] },
+  { id: 'baby_month', e: '🌟', t: 'Первый месяц', d: 'Малышу 1 месяц', prog: () => [Math.min(babyDays() || 0, 30), 30] },
+  { id: 'baby_3m', e: '🎀', t: 'Три месяца', d: 'Малышу 3 месяца', prog: () => [Math.min(babyDays() || 0, 91), 91] },
+  { id: 'baby_6m', e: '🎂', t: 'Полгодика', d: 'Малышу 6 месяцев', prog: () => [Math.min(babyDays() || 0, 182), 182] }
+];
+let celebrateQueue = [];
+function checkAchievements(silent) {
+  ACH.forEach(a => {
+    if (state.ach[a.id]) return; // полученные остаются навсегда
+    const [cur, max] = a.prog();
+    if (cur >= max) {
+      state.ach[a.id] = Date.now();
+      if (!silent) celebrateQueue.push(a);
+    }
+  });
+  if (!silent && celebrateQueue.length) setTimeout(showCelebrate, 300);
+}
+function showCelebrate() {
+  if (!celebrateQueue.length || !$('#celebrate').classList.contains('hidden')) return;
+  const a = celebrateQueue.shift();
+  $('#celE').textContent = a.e;
+  $('#celT').textContent = a.t;
+  $('#celD').textContent = 'Новое достижение: ' + a.d.charAt(0).toLowerCase() + a.d.slice(1) + '. Вы молодец! 💕';
+  $('#celebrate').classList.remove('hidden');
+  try { inTelegram && tg.HapticFeedback.notificationOccurred('success'); } catch (e) {}
+  renderAchHome();
+}
+function renderAchHome() {
+  const got = ACH.filter(a => state.ach[a.id]).length;
+  $('#achHomeText').textContent = `${got} из ${ACH.length} получено`;
+  $('#achHomeBar').style.width = (got / ACH.length * 100) + '%';
+  $('#achTileText').textContent = `${got} из ${ACH.length}`;
+}
+function renderAchievements() {
+  const got = ACH.filter(a => state.ach[a.id]).length;
+  const streak = streakDays();
+  $('#achSummary').innerHTML = `Получено <b>${got} из ${ACH.length}</b>` + (streak ? `<br>🔥 Дней подряд с записями: <b>${streak}</b>` : '');
+  $('#achGrid').innerHTML = ACH.map(a => {
+    const done = !!state.ach[a.id];
+    const [cur, max] = a.prog();
+    const showProg = !done && max > 1 && cur > 0;
+    return `<div class="ach ${done ? '' : 'locked'}">
+      <span class="e">${a.e}</span><b>${a.t}</b><span class="d">${a.d}</span>
+      ${showProg ? `<div class="pr"><div style="width:${Math.min(100, cur / max * 100)}%"></div></div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ---------- ИИ-помощник ----------
+const AI_URL = 'https://mama-ai.galkinnikita198.workers.dev'; // адрес сервера ИИ на Cloudflare
+const AI_DAILY = 5; // сколько вопросов в день у одной мамы
+const AI_SUGG = [
+  'Малыш очень часто просит грудь — это нормально?',
+  'Как понять, что молока хватает?',
+  'Больно кормить — что делать?',
+  'Что лучше есть кормящей маме?'
+];
+let aiBusy = false;
+function aiUsedToday() { return (state.aiUsage && state.aiUsage.date === todayKey()) ? state.aiUsage.n : 0; }
+function fmtAi(text) {
+  return esc(text).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+}
+function renderAi() {
+  $('#aiOff').classList.toggle('hidden', !!AI_URL);
+  $('#aiOn').classList.toggle('hidden', !AI_URL);
+  if (!AI_URL) return;
+  const chat = state.aiChat || [];
+  let html = chat.length ? '' : `<div class="msg bot">Привет! 🌸 Я помогу с вопросами о грудном вскармливании, сцеживании, уходе за малышом, питании и восстановлении после родов. Спрашивайте!</div>`;
+  html += chat.map(m => `<div class="msg ${m.role === 'user' ? 'user' : 'bot'}${m.err ? ' err' : ''}">${fmtAi(m.content)}</div>`).join('');
+  if (aiBusy) html += '<div class="msg bot typing"><span></span><span></span><span></span></div>';
+  $('#chat').innerHTML = html;
+  $('#sugg').innerHTML = chat.length ? '' : AI_SUGG.map(s => `<button data-q="${esc(s)}">${esc(s)}</button>`).join('');
+  const left = Math.max(0, AI_DAILY - aiUsedToday());
+  $('#aiLeft').textContent = left ? `Осталось вопросов сегодня: ${left} из ${AI_DAILY}` : 'Вопросы на сегодня закончились — до завтра! 🌙';
+  $('#aiSend').disabled = aiBusy || !left;
+  $('#aiInput').disabled = !left;
+}
+async function aiAsk(text) {
+  text = (text || '').trim();
+  if (!text || aiBusy || aiUsedToday() >= AI_DAILY) return;
+  state.aiChat = state.aiChat || [];
+  state.aiChat.push({ role: 'user', content: text });
+  $('#aiInput').value = ''; $('#aiInput').style.height = '';
+  aiBusy = true; haptic('light'); renderAi(); scrollChat();
+  try {
+    const history = state.aiChat.filter(m => !m.err).slice(-8).map(m => ({ role: m.role, content: m.content }));
+    const res = await fetch(AI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history, babyDays: babyDays() })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.answer) throw new Error(data.error || 'fail');
+    state.aiChat.push({ role: 'assistant', content: data.answer });
+    state.aiUsage = { date: todayKey(), n: aiUsedToday() + 1 };
+  } catch (e) {
+    state.aiChat.push({ role: 'assistant', err: true, content: 'Не получилось получить ответ 😔 Проверьте интернет и попробуйте ещё раз чуть позже. Вопрос не засчитан.' });
+  }
+  state.aiChat = state.aiChat.slice(-30);
+  aiBusy = false; save(); renderAi(); scrollChat();
+}
+function scrollChat() { setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 50); }
+
+// ---------- Сообщество ----------
+const COMMUNITY_URL = ''; // сюда вставить ссылку на чат мам, например 'https://t.me/+abc123'
+if (COMMUNITY_URL) $('#communityTile').classList.remove('hidden');
+function openCommunity() {
+  if (inTelegram && COMMUNITY_URL.startsWith('https://t.me/')) { try { tg.openTelegramLink(COMMUNITY_URL); return; } catch (e) {} }
+  window.open(COMMUNITY_URL, '_blank');
+}
+
 // ---------- Приветствие ----------
 const ONB = [
   { e: '🌸', t: 'Добро пожаловать в «Мама рядом»', p: 'Помощник для кормящей мамы: кормления, сцеживание, сон и подгузники малыша — всё в одном месте.' },
@@ -1172,7 +1405,7 @@ function saveSettings() {
 }
 
 // ---------- Вкладки ----------
-const MAIN_TABS = ['home', 'feed', 'pump', 'sleep', 'more'];
+const MAIN_TABS = ['home', 'feed', 'ai', 'pump', 'sleep', 'more'];
 let currentTab = 'home';
 function showTab(tab) {
   currentTab = tab;
@@ -1183,17 +1416,27 @@ function showTab(tab) {
   if (tab === 'menu') renderMenu();
   if (tab === 'recovery') renderRecovery();
   if (tab === 'report') renderReport();
+  if (tab === 'achievements') renderAchievements();
+  if (tab === 'ai') renderAi();
   if (inTelegram) {
     try { MAIN_TABS.includes(tab) ? tg.BackButton.hide() : tg.BackButton.show(); } catch (e) {}
   }
   window.scrollTo(0, 0);
+  if (tab === 'ai') scrollChat();
   haptic('light');
 }
 if (inTelegram) { try { tg.BackButton.onClick(() => showTab('more')); } catch (e) {} }
 
 // ---------- События ----------
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
-document.querySelectorAll('.summary .row, .tile').forEach(r => r.onclick = () => showTab(r.dataset.go));
+document.querySelectorAll('.summary .row, .tile[data-go], #achHome').forEach(r => r.onclick = () => showTab(r.dataset.go));
+$('#communityTile').onclick = openCommunity;
+$('#aiSend').onclick = () => aiAsk($('#aiInput').value);
+$('#aiInput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); aiAsk($('#aiInput').value); } });
+$('#aiInput').addEventListener('input', e => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px'; });
+$('#sugg').onclick = e => { const b = e.target.closest('[data-q]'); if (b) aiAsk(b.dataset.q); };
+$('#aiClear').onclick = () => askConfirm('Очистить переписку с ИИ?', () => { state.aiChat = []; save(); renderAi(); });
+$('#celOk').onclick = () => { $('#celebrate').classList.add('hidden'); setTimeout(showCelebrate, 250); };
 document.querySelectorAll('[data-back]').forEach(b => b.onclick = () => showTab('more'));
 document.querySelectorAll('[data-diaper]').forEach(b => b.onclick = () => addDiaper(b.dataset.diaper));
 $('#waterPlus').onclick = () => { haptic('light'); state.water.push({ t: Date.now() }); save(); renderWater(); };
@@ -1237,8 +1480,8 @@ $('#onbNext').onclick = () => {
 $('#onbSkip').onclick = () => closeOnb(false);
 $('#replayOnb').onclick = openOnb;
 $('#wipeData').onclick = wipeData;
-$('#reportCopy').onclick = () => copyText(buildReport());
-$('#reportShare').onclick = shareReport;
+$('#reportCopy').onclick = () => { copyText(buildReport()); state.reportsSent++; save(); };
+$('#reportShare').onclick = () => { shareReport(); state.reportsSent++; save(); };
 $('#openSettings').onclick = openSettings;
 $('#settingsCancel').onclick = closeSettings;
 $('#settingsSave').onclick = saveSettings;
@@ -1255,7 +1498,7 @@ document.addEventListener('click', e => {
 });
 
 // ---------- Запуск ----------
-function render() { renderBaby(); renderDiapers(); renderWater(); renderSummary(); renderFeed(); renderPump(); renderSleep(); }
+function render() { renderBaby(); renderDiapers(); renderWater(); renderSummary(); renderFeed(); renderPump(); renderSleep(); renderAchHome(); }
 let lastDay = todayKey();
 function tick() {
   const now = Date.now();
@@ -1273,6 +1516,11 @@ const user = inTelegram && tg.initDataUnsafe && tg.initDataUnsafe.user;
 if (user && user.first_name) $('#hello').textContent = `Привет, ${user.first_name}! 🌸`;
 const dateStr = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
 $('#todayLabel').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+// При самом первом запуске достижения за уже сделанные записи выдаём тихо, дальше — с праздником
+checkAchievements(!state.achInit);
+state.achInit = true;
+try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
 
 applyTheme(); render(); renderTips(); tick();
 setInterval(tick, 1000);
